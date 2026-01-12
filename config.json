@@ -1,0 +1,30 @@
+{
+  "user": {
+    "name": "Josh",
+    "github_username": "",
+    "email": ""
+  },
+  "dotfiles": {
+    "repo": "https://github.com/zackmckennarunpod/.dotfiles",
+    "local_path": "~/Developer/.dotfiles"
+  },
+  "setup": {
+    "skip_steps": [],
+    "optional_tools": {
+      "gastown": true,
+      "beads": true,
+      "linear_mcp": true,
+      "notion_mcp": true,
+      "playwright": true
+    }
+  },
+  "api_keys": {
+    "linear": "${LINEAR_API_KEY}",
+    "notion": "${NOTION_API_KEY}"
+  },
+  "preferences": {
+    "shell": "zsh",
+    "editor": "neovim",
+    "theme": "dark"
+  }
+}

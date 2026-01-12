@@ -11,8 +11,8 @@ A self-guided wizard to set up your development environment, powered by Claude C
 
 2. **Clone this repo**:
    ```bash
-   git clone https://github.com/zackmckennarunpod/hello-josh.git
-   cd hello-josh
+   git clone https://github.com/zackmckennarunpod/hello-claude.git
+   cd hello-claude
    ```
 
 3. **Run Claude Code**:
@@ -20,9 +20,11 @@ A self-guided wizard to set up your development environment, powered by Claude C
    claude
    ```
 
-4. **Say**: "help me get started"
+4. **Edit `config.json`** with your name and preferences
 
-Claude will guide you through everything from there.
+5. **Run Claude Code and say**: "help me get started"
+
+Claude will read your config and guide you through a personalized setup.
 
 ## What You'll Set Up
 
@@ -59,8 +61,9 @@ Then open http://localhost:3000 in your browser.
 ## Files in This Repo
 
 ```
-hello-josh/
+hello-claude/
 ├── CLAUDE.md           # Instructions for Claude (the wizard brain)
+├── config.json         # Personalization config (edit this!)
 ├── README.md           # You are here
 ├── steps/              # Step-by-step setup guides
 │   ├── 01-prerequisites.md
