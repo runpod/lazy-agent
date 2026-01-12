@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tmux Tutorial - Learn Vim-Style Terminal Navigation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>tmux Tutorial</h1>
+      <p class="subtitle">Master vim-style terminal navigation</p>
+    </header>
+
+    <nav class="toc">
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#basics">The Basics</a></li>
+        <li><a href="#sessions">Sessions</a></li>
+        <li><a href="#windows">Windows (Tabs)</a></li>
+        <li><a href="#panes">Panes</a></li>
+        <li><a href="#navigation">Vim-Style Navigation</a></li>
+        <li><a href="#resizing">Resizing Panes</a></li>
+        <li><a href="#copy-mode">Copy Mode</a></li>
+        <li><a href="#workflow">Real Workflow</a></li>
+        <li><a href="#practice">Practice Exercises</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <!-- The Basics -->
+      <section id="basics">
+        <h2>The Basics</h2>
+        <p>tmux (terminal multiplexer) lets you create multiple terminal sessions, split your screen, and keep sessions alive even when you disconnect.</p>
+
+        <div class="concept">
+          <h3>The Prefix Key</h3>
+          <p>Almost all tmux commands start with the <strong>prefix key</strong>:</p>
+          <div class="key-demo">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd>
+          </div>
+          <p>Press and release the prefix, then press the next key.</p>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>r</kbd>
+          </div>
+          <div class="description">Reload tmux config</div>
+          <div class="note">Shows "Config reloaded!" message</div>
+        </div>
+      </section>
+
+      <!-- Sessions -->
+      <section id="sessions">
+        <h2>Sessions</h2>
+        <p>A session is a workspace. Create one per project.</p>
+
+        <div class="terminal-demo">
+          <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span>Terminal</span>
+          </div>
+          <div class="terminal-body">
+            <div class="line"><span class="prompt">$</span> tmux new -s myproject</div>
+            <div class="line comment"># Creates a new session named "myproject"</div>
+            <div class="line"><span class="prompt">$</span> tmux ls</div>
+            <div class="line comment"># Lists all sessions</div>
+            <div class="line"><span class="prompt">$</span> tmux attach -t myproject</div>
+            <div class="line comment"># Attaches to an existing session</div>
+          </div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>d</kbd>
+          </div>
+          <div class="description">Detach from session</div>
+          <div class="note">Session keeps running in background!</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>s</kbd>
+          </div>
+          <div class="description">List all sessions</div>
+          <div class="note">Interactive session picker</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>$</kbd>
+          </div>
+          <div class="description">Rename current session</div>
+        </div>
+      </section>
+
+      <!-- Windows -->
+      <section id="windows">
+        <h2>Windows (Tabs)</h2>
+        <p>Windows are like browser tabs. Each window has its own set of panes.</p>
+
+        <div class="window-demo">
+          <div class="window-tabs">
+            <div class="tab active">0: editor</div>
+            <div class="tab">1: server</div>
+            <div class="tab">2: git</div>
+          </div>
+          <p class="demo-caption">The status bar shows your windows</p>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>c</kbd>
+          </div>
+          <div class="description">Create new window</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>n</kbd>
+          </div>
+          <div class="description">Next window</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>p</kbd>
+          </div>
+          <div class="description">Previous window</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>0-9</kbd>
+          </div>
+          <div class="description">Jump to window by number</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>,</kbd>
+          </div>
+          <div class="description">Rename current window</div>
+        </div>
+      </section>
+
+      <!-- Panes -->
+      <section id="panes">
+        <h2>Panes</h2>
+        <p>Split your window into multiple panes. This is where tmux shines!</p>
+
+        <div class="pane-demo">
+          <div class="pane-container">
+            <div class="pane active">
+              <span class="pane-label">Editor</span>
+            </div>
+            <div class="pane-right">
+              <div class="pane">
+                <span class="pane-label">Tests</span>
+              </div>
+              <div class="pane">
+                <span class="pane-label">Server</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="keybinding-card featured">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>|</kbd>
+          </div>
+          <div class="description">Split pane vertically</div>
+          <div class="note">Creates pane to the right</div>
+        </div>
+
+        <div class="keybinding-card featured">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>-</kbd>
+          </div>
+          <div class="description">Split pane horizontally</div>
+          <div class="note">Creates pane below</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>m</kbd>
+          </div>
+          <div class="description">Toggle zoom (fullscreen pane)</div>
+          <div class="note">Great for focusing on one pane temporarily</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>Ctrl</kbd> + <kbd>d</kbd>
+          </div>
+          <div class="description">Close current pane</div>
+          <div class="note">Or just type "exit"</div>
+        </div>
+      </section>
+
+      <!-- Vim-Style Navigation -->
+      <section id="navigation">
+        <h2>Vim-Style Navigation</h2>
+        <p>This config uses vim-style keys to move between panes. <strong>No prefix needed!</strong></p>
+
+        <div class="vim-grid">
+          <div class="vim-row">
+            <div class="vim-cell empty"></div>
+            <div class="vim-cell">
+              <kbd>Ctrl</kbd> + <kbd>k</kbd>
+              <span class="arrow">↑</span>
+              <span class="label">Up</span>
+            </div>
+            <div class="vim-cell empty"></div>
+          </div>
+          <div class="vim-row">
+            <div class="vim-cell">
+              <kbd>Ctrl</kbd> + <kbd>h</kbd>
+              <span class="arrow">←</span>
+              <span class="label">Left</span>
+            </div>
+            <div class="vim-cell center-hint">
+              <span>Navigate panes</span>
+            </div>
+            <div class="vim-cell">
+              <kbd>Ctrl</kbd> + <kbd>l</kbd>
+              <span class="arrow">→</span>
+              <span class="label">Right</span>
+            </div>
+          </div>
+          <div class="vim-row">
+            <div class="vim-cell empty"></div>
+            <div class="vim-cell">
+              <kbd>Ctrl</kbd> + <kbd>j</kbd>
+              <span class="arrow">↓</span>
+              <span class="label">Down</span>
+            </div>
+            <div class="vim-cell empty"></div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>Works with Neovim too!</h4>
+          <p>This config detects when you're in Neovim and passes the keys through, so you can navigate seamlessly between Neovim splits and tmux panes with the same keys.</p>
+        </div>
+      </section>
+
+      <!-- Resizing -->
+      <section id="resizing">
+        <h2>Resizing Panes</h2>
+        <p>Use vim keys with the prefix to resize panes.</p>
+
+        <div class="resize-demo">
+          <div class="resize-container">
+            <div class="resize-pane" id="resize-demo-pane">
+              <span>Resize me!</span>
+            </div>
+            <div class="resize-controls">
+              <button onclick="resizePane('left')">← h</button>
+              <button onclick="resizePane('down')">↓ j</button>
+              <button onclick="resizePane('up')">↑ k</button>
+              <button onclick="resizePane('right')">→ l</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>h</kbd>
+          </div>
+          <div class="description">Resize left (5 cells)</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>j</kbd>
+          </div>
+          <div class="description">Resize down (5 cells)</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>k</kbd>
+          </div>
+          <div class="description">Resize up (5 cells)</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>l</kbd>
+          </div>
+          <div class="description">Resize right (5 cells)</div>
+        </div>
+
+        <div class="info-box">
+          <h4>Repeatable!</h4>
+          <p>After pressing the prefix, you can tap h/j/k/l multiple times to keep resizing without pressing the prefix again.</p>
+        </div>
+      </section>
+
+      <!-- Copy Mode -->
+      <section id="copy-mode">
+        <h2>Copy Mode (Vim-Style)</h2>
+        <p>Scroll through history and copy text using vim keybindings.</p>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd class="prefix">Ctrl</kbd> + <kbd>b</kbd> <span class="then">then</span> <kbd>[</kbd>
+          </div>
+          <div class="description">Enter copy mode</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>q</kbd> <span class="or">or</span> <kbd>Esc</kbd>
+          </div>
+          <div class="description">Exit copy mode</div>
+        </div>
+
+        <h3>In Copy Mode</h3>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>j</kbd> / <kbd>k</kbd>
+          </div>
+          <div class="description">Move down / up</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>Ctrl</kbd> + <kbd>d</kbd> / <kbd>Ctrl</kbd> + <kbd>u</kbd>
+          </div>
+          <div class="description">Page down / up</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>/</kbd>
+          </div>
+          <div class="description">Search forward</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>?</kbd>
+          </div>
+          <div class="description">Search backward</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>Space</kbd>
+          </div>
+          <div class="description">Start selection</div>
+        </div>
+
+        <div class="keybinding-card">
+          <div class="keys">
+            <kbd>Enter</kbd>
+          </div>
+          <div class="description">Copy selection and exit</div>
+        </div>
+      </section>
+
+      <!-- Workflow -->
+      <section id="workflow">
+        <h2>Real Workflow Example</h2>
+        <p>Here's how you might use tmux for a typical development session:</p>
+
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Start a project session</h4>
+              <code>tmux new -s myapp</code>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Create your layout</h4>
+              <p><kbd class="small">Prefix</kbd> + <kbd class="small">|</kbd> to split for code</p>
+              <p><kbd class="small">Prefix</kbd> + <kbd class="small">-</kbd> to split for tests</p>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Navigate with vim keys</h4>
+              <p><kbd class="small">Ctrl</kbd> + <kbd class="small">h/j/k/l</kbd> to move between panes</p>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Create windows for different contexts</h4>
+              <p><kbd class="small">Prefix</kbd> + <kbd class="small">c</kbd> for new window</p>
+              <p><kbd class="small">Prefix</kbd> + <kbd class="small">,</kbd> to name it</p>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Detach when done</h4>
+              <p><kbd class="small">Prefix</kbd> + <kbd class="small">d</kbd> to detach</p>
+              <p>Session keeps running!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Practice -->
+      <section id="practice">
+        <h2>Practice Exercises</h2>
+        <p>Open a terminal and try these:</p>
+
+        <div class="exercise">
+          <h3>Exercise 1: Basic Session</h3>
+          <ol>
+            <li>Create a session: <code>tmux new -s practice</code></li>
+            <li>Detach: <kbd>Prefix</kbd> + <kbd>d</kbd></li>
+            <li>List sessions: <code>tmux ls</code></li>
+            <li>Reattach: <code>tmux attach -t practice</code></li>
+          </ol>
+        </div>
+
+        <div class="exercise">
+          <h3>Exercise 2: Pane Splits</h3>
+          <ol>
+            <li>Split vertically: <kbd>Prefix</kbd> + <kbd>|</kbd></li>
+            <li>Split horizontally: <kbd>Prefix</kbd> + <kbd>-</kbd></li>
+            <li>Navigate all panes with <kbd>Ctrl</kbd> + <kbd>h/j/k/l</kbd></li>
+            <li>Zoom a pane: <kbd>Prefix</kbd> + <kbd>m</kbd></li>
+            <li>Unzoom: <kbd>Prefix</kbd> + <kbd>m</kbd> again</li>
+          </ol>
+        </div>
+
+        <div class="exercise">
+          <h3>Exercise 3: Windows</h3>
+          <ol>
+            <li>Create 3 windows: <kbd>Prefix</kbd> + <kbd>c</kbd> (x3)</li>
+            <li>Name them: <kbd>Prefix</kbd> + <kbd>,</kbd></li>
+            <li>Jump between: <kbd>Prefix</kbd> + <kbd>0/1/2</kbd></li>
+          </ol>
+        </div>
+
+        <div class="exercise">
+          <h3>Exercise 4: Resize</h3>
+          <ol>
+            <li>Create a split: <kbd>Prefix</kbd> + <kbd>|</kbd></li>
+            <li>Resize: <kbd>Prefix</kbd> + <kbd>h</kbd> (repeat to keep resizing)</li>
+            <li>Try all directions: <kbd>h/j/k/l</kbd></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Config Reference -->
+      <section id="config">
+        <h2>Your Config</h2>
+        <p>This tutorial is based on the tmux config at:</p>
+        <code class="file-path">~/Developer/.dotfiles/.tmux.conf</code>
+
+        <div class="info-box">
+          <h4>Quick Reload</h4>
+          <p>After editing your config, reload it with:</p>
+          <p><kbd class="small">Prefix</kbd> + <kbd class="small">r</kbd></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Made with Claude Code | <a href="https://github.com/zackmckennarunpod/hello-josh">View Source</a></p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

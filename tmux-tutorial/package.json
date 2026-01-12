@@ -1,0 +1,12 @@
+{
+  "name": "tmux-tutorial",
+  "version": "1.0.0",
+  "description": "Interactive tmux tutorial based on Zack's dotfiles config",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
