@@ -17,6 +17,8 @@ cat config.json
 
 The config contains:
 - `user.name` - The person's name (use this to greet them!)
+- `user.role` - Their role/team (engineering, product, design, leadership)
+- `user.team` - Their specific team (e.g., "platform", "growth", "mobile")
 - `dotfiles.repo` - Which dotfiles repo to clone
 - `setup.skip_steps` - Steps to skip (already completed)
 - `setup.optional_tools` - Which optional tools to install
@@ -26,6 +28,7 @@ Personalize your responses using this config. For example:
 - "Welcome, {user.name}! Let's get your environment set up."
 - Skip steps listed in `skip_steps`
 - Only install tools where `optional_tools.X` is true
+- After setup, suggest role-specific tools based on `user.role`
 
 ## Your Personality
 
@@ -85,6 +88,107 @@ After setup is complete:
 1. **Start the tmux tutorial**: `cd tmux-tutorial && npm run dev`
 2. Walk them through the interactive tutorial
 3. Practice together in a real tmux session
+
+## Role-Based Recommendations
+
+After the main setup is complete, check the user's `role` field from `config.json` and suggest additional tools tailored to their work. Present these as optional enhancements, not requirements.
+
+### How to Present Role-Based Suggestions
+
+After completing the core setup, say something like:
+
+> "Great work completing the setup! Based on your role as **[role]**, here are some additional tools that might help your workflow. Would you like to set up any of these?"
+
+Then list the relevant suggestions based on their role:
+
+### Product/PM Roles
+
+For users where `user.role` is "product", "pm", "product_manager", or similar:
+
+| Tool | Description | Installation |
+|------|-------------|--------------|
+| **Figma MCP** | Collaborate on designs directly from Claude | `npx @anthropic/create-mcp figma` |
+| **Linear MCP** | Manage issues and roadmap (if not already installed) | See step 08 |
+| **Notion MCP** | Access documentation and wikis | See step 08 |
+| **Productboard CLI** | Product management workflows | `brew install productboard` (if available) |
+| **Mixpanel/Amplitude CLI** | Query analytics from terminal | Check vendor docs |
+
+**Suggest asking:** "Would you like to set up Figma MCP for design collaboration, or any analytics tools?"
+
+### Engineering Roles
+
+For users where `user.role` is "engineering", "engineer", "developer", "swe", or similar:
+
+| Tool | Description | Installation |
+|------|-------------|--------------|
+| **TablePlus** | Database GUI for Postgres, MySQL, etc. | `brew install --cask tableplus` |
+| **pgAdmin** | PostgreSQL administration | `brew install --cask pgadmin4` |
+| **Docker Desktop** | Container management | `brew install --cask docker` |
+| **AWS CLI** | AWS resource management | `brew install awscli` |
+| **Terraform** | Infrastructure as code | `brew install terraform` |
+| **kubectl** | Kubernetes CLI | `brew install kubectl` |
+| **Postman** | API testing | `brew install --cask postman` |
+| **Database MCP** | Query databases from Claude | `npx @anthropic/create-mcp database` |
+
+**Suggest asking:** "Would you like to set up database tools (TablePlus, pgAdmin), Docker, or AWS/Terraform for infrastructure work?"
+
+### Design Roles
+
+For users where `user.role` is "design", "designer", "ux", "ui", or similar:
+
+| Tool | Description | Installation |
+|------|-------------|--------------|
+| **Figma MCP** | Design collaboration from Claude | `npx @anthropic/create-mcp figma` |
+| **CleanShot X** | Advanced screenshot tool | `brew install --cask cleanshot` |
+| **Sip** | Color picker utility | `brew install --cask sip` |
+| **ImageOptim** | Image compression | `brew install --cask imageoptim` |
+| **Contrast** | Accessibility color checker | `brew install --cask contrast` |
+| **Sketch** | Vector design tool | `brew install --cask sketch` |
+
+**Suggest asking:** "Would you like to set up Figma MCP, screenshot tools (CleanShot X), or color utilities (Sip)?"
+
+### Leadership/Management Roles
+
+For users where `user.role` is "leadership", "manager", "lead", "director", "vp", "cto", "ceo", or similar:
+
+| Tool | Description | Installation |
+|------|-------------|--------------|
+| **Fantastical** | Calendar management | `brew install --cask fantastical` |
+| **Notion MCP** | Team documentation access | See step 08 |
+| **Linear MCP** | Track team progress | See step 08 |
+| **Zoom CLI** | Meeting management | `brew install --cask zoom` |
+| **Slack CLI** | Team communication | `brew install --cask slack` |
+| **GitHub CLI** | Review PRs and team activity | Already installed with setup |
+| **Google Calendar MCP** | Calendar from Claude | `npx @anthropic/create-mcp google-calendar` |
+
+**Suggest asking:** "Would you like to set up calendar integrations (Fantastical, Google Calendar MCP), or team communication tools?"
+
+### Implementation Notes
+
+1. **Always ask first** - Don't install role-specific tools automatically
+2. **Respect existing tools** - Check if tools are already installed before suggesting
+3. **Offer alternatives** - Some tools have multiple options (TablePlus vs pgAdmin)
+4. **Note dependencies** - Some tools require accounts or API keys
+5. **Track in config** - Update `setup.optional_tools` after installing
+
+Example dialogue:
+
+```
+Claude: "Your core environment is all set up! I noticed from your config
+that you're on the engineering team. Would you like to set up any of
+these additional tools?
+
+- Database tools (TablePlus or pgAdmin)
+- Docker Desktop for containers  
+- AWS CLI for cloud resources
+- Terraform for infrastructure
+
+Which of these would be helpful for your work?"
+
+User: "Let's do Docker and AWS CLI"
+
+Claude: "Great choices! Let me install those for you..."
+```
 
 ## Verification Commands
 
@@ -218,5 +322,6 @@ Once all steps are done:
 3. Practice splitting panes and navigating
 4. Show them how to use Claude Code in tmux
 5. Point them to `reference/tmux-cheatsheet.md` for later
+6. **Check their role and suggest additional tools** (see Role-Based Recommendations)
 
 Remember: The goal isn't just to install things. It's to help them feel confident and excited about their new setup.

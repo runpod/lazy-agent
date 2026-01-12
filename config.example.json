@@ -2,7 +2,9 @@
   "user": {
     "name": "YOUR_NAME",
     "github_username": "",
-    "email": ""
+    "email": "",
+    "role": "engineering",
+    "team": "platform"
   },
   "dotfiles": {
     "repo": "https://github.com/zackmckennarunpod/.dotfiles",
@@ -15,7 +17,12 @@
       "beads": true,
       "linear_mcp": true,
       "notion_mcp": true,
-      "playwright": true
+      "playwright": true,
+      "figma_mcp": false,
+      "database_tools": false,
+      "docker": false,
+      "aws_cli": false,
+      "terraform": false
     }
   },
   "api_keys": {
@@ -26,5 +33,21 @@
     "shell": "zsh",
     "editor": "neovim",
     "theme": "dark"
-  }
+  },
+  "_role_options": [
+    "engineering",
+    "product",
+    "design",
+    "leadership"
+  ],
+  "_team_examples": [
+    "platform",
+    "growth",
+    "mobile",
+    "infrastructure",
+    "frontend",
+    "backend",
+    "data",
+    "devops"
+  ]
 }
