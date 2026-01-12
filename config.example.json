@@ -20,6 +20,7 @@
       "playwright": true,
       "gcalcli": true,
       "terminal_power_tools": true,
+      "slack": true,
       "figma_mcp": false,
       "database_tools": false,
       "docker": false,
