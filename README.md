@@ -45,7 +45,6 @@ Claude will read your config and guide you through a personalized setup.
 - **Playwright** - Browser automation and testing
 - **gcalcli** - Google Calendar CLI for terminal-based scheduling [OPTIONAL]
 - **Terminal Power Tools** - fzf, bat, eza, jq, httpie [QUICK]
-- **Slack CLI (slackcat)** - Post messages and files to Slack [OPTIONAL]
 
 ## What You'll Learn
 
@@ -84,8 +83,7 @@ hello-claude/
 │   ├── 08-linear-and-mcp.md
 │   ├── 09-playwright.md
 │   ├── 10-gcalcli.md         # [OPTIONAL] - Claude asks first
-│   ├── 11-terminal-power-tools.md  # [QUICK] - Recommended for all
-│   └── 12-slack.md           # [OPTIONAL] - Slack CLI
+│   └── 11-terminal-power-tools.md  # [QUICK] - Recommended for all
 ├── tmux-tutorial/      # Interactive web tutorial
 │   ├── src/
 │   ├── public/
