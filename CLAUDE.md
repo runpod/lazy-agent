@@ -72,6 +72,7 @@ Read these in order (skip completed steps):
 7. `steps/07-gastown.md` - Multi-agent workspaces
 8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP
 9. `steps/09-playwright.md` - Browser automation with Playwright
+10. `steps/10-gcalcli.md` - Google Calendar CLI
 
 ### Phase 3: Interactive Learning
 
@@ -100,6 +101,9 @@ tmux -V
 
 # Claude Code
 which claude
+
+# gcalcli
+which gcalcli
 ```
 
 ## Handling Problems
@@ -157,6 +161,36 @@ Gastown (`gt`) manages multi-agent workspaces. Key commands:
 | `gt mq` | Merge queue operations |
 
 GitHub: https://github.com/steveyegge/gastown
+
+## gcalcli Setup - Interactive Walkthrough
+
+When guiding users through gcalcli setup (step 10), this requires an **interactive OAuth walkthrough**. The user must complete several steps in Google Cloud Console that Claude cannot do for them.
+
+**IMPORTANT**: Walk through the OAuth setup step-by-step, waiting for user confirmation at each step:
+
+1. **Read the step file**: `steps/10-gcalcli.md`
+2. **Install gcalcli**: `brew install gcalcli`
+3. **Guide OAuth setup interactively**:
+   - Tell the user to open https://console.cloud.google.com/
+   - Wait for them to confirm they're logged in
+   - Guide them through creating/selecting a project
+   - Wait for confirmation
+   - Guide them to enable Google Calendar API
+   - Wait for confirmation ("Do you see 'API Enabled'?")
+   - Guide them through OAuth consent screen setup
+   - Wait for confirmation
+   - Guide them to create OAuth credentials (Desktop app)
+   - Wait for confirmation that they have Client ID and Secret
+   - Tell them to run `gcalcli init` and paste their credentials
+   - Wait for confirmation that browser auth completed
+4. **Verify it works**: Have them run `gcalcli agenda`
+5. **Show common commands**: Quick reference from the step file
+
+**Key points for interactive setup**:
+- Never assume a step is complete - always ask for confirmation
+- Explain what each step does and why it's needed
+- Be patient - OAuth setup can be confusing
+- If they get stuck, offer to troubleshoot together
 
 ## Key Bindings to Teach
 

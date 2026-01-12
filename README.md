@@ -43,6 +43,7 @@ Claude will read your config and guide you through a personalized setup.
 - **Linear MCP** - Claude Code integration with Linear
 - **Notion MCP** - Claude Code integration with Notion
 - **Playwright** - Browser automation and testing
+- **gcalcli** - Google Calendar CLI for terminal-based scheduling
 
 ## What You'll Learn
 
@@ -79,7 +80,8 @@ hello-claude/
 │   ├── 06-first-project.md
 │   ├── 07-gastown.md
 │   ├── 08-linear-and-mcp.md
-│   └── 09-playwright.md
+│   ├── 09-playwright.md
+│   └── 10-gcalcli.md
 ├── tmux-tutorial/      # Interactive web tutorial
 │   ├── src/
 │   ├── public/
