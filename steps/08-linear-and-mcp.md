@@ -3,14 +3,13 @@
 ## Overview
 
 This step sets up:
-- **Linear** - Project management and issue tracking
-- **Beads** - Git-backed issue tracker that syncs with Linear
+- **Beads** - Git-backed issue tracker with Linear sync
 - **Linear MCP** - Claude Code integration with Linear
 - **Notion MCP** - Claude Code integration with Notion
 
 ## Part 1: Beads (Git-Backed Issue Tracking)
 
-Beads (`bd`) is a git-backed issue tracker that syncs with Linear. Issues live in your repo and sync bidirectionally.
+Beads (`bd`) is a git-backed issue tracker that syncs bidirectionally with Linear. Issues live in your repo as JSONL files.
 
 ### Install Beads
 
@@ -23,6 +22,9 @@ npm install -g @beads/bd
 
 # Option 3: Go
 go install github.com/steveyegge/beads/cmd/bd@latest
+
+# Option 4: Shell script
+curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 ```
 
 ### Verify Installation
@@ -45,122 +47,151 @@ This creates a `.beads/` directory for tracking issues.
 | Command | Description |
 |---------|-------------|
 | `bd list` | List all issues |
-| `bd create` | Create a new issue |
+| `bd ready` | List tasks with no open blockers |
+| `bd create "Title"` | Create a new issue |
 | `bd show ISSUE-ID` | Show issue details |
 | `bd update ISSUE-ID` | Update an issue |
-| `bd sync` | Sync with Linear |
+| `bd close ISSUE-ID` | Close an issue |
 
-## Part 2: Linear Sync Setup
+## Part 2: Linear Sync with Beads
 
-### Get Linear API Key
+Beads has **built-in** Linear sync via `bd linear` commands. No separate MCP needed for sync.
 
-1. Go to Linear: https://linear.app
-2. Settings → API → Personal API keys
-3. Create a new key with appropriate scopes
-4. Save the key securely
+### Get Linear Credentials
 
-### Configure Beads for Linear Sync
+1. **API Key**: Linear → Settings → API → Personal API keys → Create key
+2. **Team ID**: Linear → Settings → General → find the Team ID (UUID format)
+
+### Configure Beads for Linear
 
 ```bash
-# Set your Linear API key
-export LINEAR_API_KEY="lin_api_xxxxx"
+# Set API key
+bd config set linear.api_key "lin_api_YOUR_KEY_HERE"
 
-# Or add to your ~/.zshrc.local
-echo 'export LINEAR_API_KEY="your-key-here"' >> ~/.zshrc.local
+# Set team ID (required!)
+bd config set linear.team_id "YOUR_TEAM_UUID"
 ```
 
-### Sync with Linear
+Or use environment variables:
 
 ```bash
-# Initial sync (pulls issues from Linear)
-bd sync
+# Add to ~/.zshrc.local
+export LINEAR_API_KEY="lin_api_YOUR_KEY_HERE"
+```
 
-# Push local issues to Linear
-bd sync --push
+### Check Linear Status
+
+```bash
+bd linear status
+```
+
+This shows:
+- Configuration status (API key, team ID)
+- Last sync timestamp
+- Issues linked to Linear
+
+### Sync Commands
+
+```bash
+# Pull issues from Linear into Beads
+bd linear sync --pull
+
+# Push local Beads issues to Linear
+bd linear sync --push
+
+# Full bidirectional sync (pull, resolve conflicts, push)
+bd linear sync
+
+# Preview without making changes
+bd linear sync --dry-run
+```
+
+### Example Linear Workflow
+
+```bash
+# Initial setup
+bd config set linear.api_key "lin_api_abc123..."
+bd config set linear.team_id "team-uuid-456"
+
+# Check connection
+bd linear status
+
+# Pull all issues from Linear
+bd linear sync --pull
+
+# Work locally
+bd create "Fix auth bug" -t bug -p 1
+bd update bd-abc --status in_progress
+
+# Push changes back to Linear
+bd linear sync --push
+
+# Or do full bidirectional sync
+bd linear sync
 ```
 
 ## Part 3: MCP Tools for Claude Code
 
-MCP (Model Context Protocol) tools extend Claude Code to interact with external services.
+MCP (Model Context Protocol) tools extend Claude Code to interact with external services directly.
 
-### Install Linear MCP
+### Linear MCP (Community)
 
-The Linear MCP tool lets Claude Code read and create Linear issues directly.
+The Linear MCP lets Claude Code read and create Linear issues directly.
 
 ```bash
-# Install the Linear MCP server
-npm install -g @anthropic/mcp-server-linear
+# Install community Linear MCP
+npm install -g @mseep/linear-mcp
 ```
 
-### Configure Claude Code for Linear MCP
-
-Add to your Claude Code config (`~/.config/claude-code/settings.json`):
+Add to your Claude Code config (`~/.claude/settings.json`):
 
 ```json
 {
   "mcpServers": {
     "linear": {
-      "command": "mcp-server-linear",
+      "command": "npx",
+      "args": ["-y", "@mseep/linear-mcp"],
       "env": {
-        "LINEAR_API_KEY": "your-linear-api-key"
+        "LINEAR_API_KEY": "lin_api_YOUR_KEY"
       }
     }
   }
 }
 ```
 
-Or create/update the config:
+### Notion MCP (Official)
+
+The official Notion MCP lets Claude Code read and update Notion pages.
 
 ```bash
-mkdir -p ~/.config/claude-code
-
-cat > ~/.config/claude-code/settings.json << 'EOF'
-{
-  "mcpServers": {
-    "linear": {
-      "command": "mcp-server-linear",
-      "env": {
-        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
-      }
-    }
-  }
-}
-EOF
+# Install official Notion MCP
+npm install -g @notionhq/notion-mcp-server
 ```
 
-### Install Notion MCP
-
-The Notion MCP tool lets Claude Code read and update Notion pages.
-
-```bash
-# Install the Notion MCP server
-npm install -g @anthropic/mcp-server-notion
-```
-
-### Get Notion API Key
+#### Get Notion API Key
 
 1. Go to: https://www.notion.so/my-integrations
 2. Create a new integration
-3. Copy the "Internal Integration Token"
-4. Share your Notion pages/databases with the integration
+3. Copy the "Internal Integration Secret"
+4. **Important**: Share your Notion pages/databases with the integration
 
-### Configure Claude Code for Notion MCP
-
-Update your Claude Code config:
+Add to your Claude Code config:
 
 ```json
 {
   "mcpServers": {
     "linear": {
-      "command": "mcp-server-linear",
+      "command": "npx",
+      "args": ["-y", "@mseep/linear-mcp"],
       "env": {
-        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+        "LINEAR_API_KEY": "lin_api_YOUR_KEY"
       }
     },
     "notion": {
-      "command": "mcp-server-notion",
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
       "env": {
-        "NOTION_API_KEY": "${NOTION_API_KEY}"
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer YOUR_NOTION_SECRET\", \"Notion-Version\": \"2022-06-28\"}"
       }
     }
   }
@@ -175,7 +206,7 @@ Add to `~/.zshrc.local`:
 # Linear
 export LINEAR_API_KEY="lin_api_xxxxx"
 
-# Notion
+# Notion (for scripts, not needed if in MCP config)
 export NOTION_API_KEY="secret_xxxxx"
 ```
 
@@ -187,68 +218,111 @@ source ~/.zshrc
 
 ## Part 4: Using the Integrations
 
-### With Claude Code + Linear MCP
+### With Beads (Local Issue Tracking)
+
+```bash
+# In Claude Code, use slash commands
+/beads list
+/beads create "Fix login bug"
+/beads ready
+/beads sync   # Note: this uses bd sync, for Linear use bd linear sync
+```
+
+### With Linear MCP (Direct API Access)
+
+Once configured, Claude can interact with Linear directly:
 
 ```
 > show me my Linear issues
 
-> create a new issue in Linear: "Add dark mode to settings page"
+> create a Linear issue: "Add dark mode to settings"
 
-> update issue LIN-123 to In Progress
+> what's the status of TEAM-123?
 ```
 
-### With Claude Code + Notion MCP
+### With Notion MCP
 
 ```
 > search my Notion for "project roadmap"
 
 > update the Notion page "Sprint Planning" with today's notes
+
+> look at my Notion profile and fill out this config for me
 ```
 
-### With Beads
+### Beads + Linear Together
 
-```
-> /beads list
+Beads and Linear MCP serve different purposes:
+- **Beads**: Local git-backed issues that sync to Linear (for agents working across sessions)
+- **Linear MCP**: Direct API access to Linear (for quick queries and updates)
 
-> /beads create "Fix login bug"
+Use both together:
+```bash
+# Create issue locally with Beads
+bd create "Implement feature X" -t feature -p 2
 
-> /beads sync
+# Sync to Linear
+bd linear sync --push
+
+# Query via Linear MCP in Claude
+> show me all P1 bugs in Linear
 ```
 
 ## Verification Checklist
 
 - [ ] `bd --version` works
 - [ ] `bd init` in a test project succeeds
-- [ ] LINEAR_API_KEY is set in environment
-- [ ] NOTION_API_KEY is set in environment
-- [ ] Claude Code recognizes the MCP tools (restart Claude after config)
-- [ ] `bd sync` connects to Linear (if you have access)
+- [ ] `bd config set linear.api_key "..."` configured
+- [ ] `bd config set linear.team_id "..."` configured
+- [ ] `bd linear status` shows "Connected"
+- [ ] `bd linear sync --pull --dry-run` shows issues
+- [ ] Claude Code recognizes MCP tools (restart Claude after config changes)
 
 ## Troubleshooting
 
-### MCP tools not working?
+### Beads Linear sync not working?
 
-1. Restart Claude Code after changing config
-2. Check environment variables are set: `echo $LINEAR_API_KEY`
-3. Verify the MCP server is installed: `which mcp-server-linear`
+1. Check both API key AND team ID are set:
+   ```bash
+   bd linear status
+   ```
 
-### Beads sync failing?
+2. Test the API key:
+   ```bash
+   bd linear sync --pull --dry-run
+   ```
 
-1. Check API key: `echo $LINEAR_API_KEY`
-2. Verify you have access to the Linear workspace
-3. Run `bd sync --verbose` for detailed output
+3. Check for errors:
+   ```bash
+   bd linear sync --pull 2>&1 | head -20
+   ```
 
-### Permission errors?
+### MCP tools not showing up in Claude?
 
-Make sure your API keys have the right scopes:
-- Linear: Read/write issues, comments
-- Notion: Read/write content for shared pages
+1. Restart Claude Code after config changes
+2. Verify the config file location: `~/.claude/settings.json`
+3. Check the MCP server is installed: `which npx`
+4. Test manually: `npx -y @mseep/linear-mcp --help`
+
+### "Team ID not configured"
+
+```bash
+# Find your team ID in Linear URL or settings
+bd config set linear.team_id "YOUR_TEAM_UUID"
+```
+
+### Notion integration not finding pages?
+
+Make sure you've shared the pages with your integration:
+1. Open the Notion page
+2. Click "Share" in the top right
+3. Invite your integration by name
 
 ## Next Steps
 
-With these tools configured, Claude Code can:
-- Read and update your Linear issues
-- Access your Notion workspace
-- Keep local issues synced via Beads
+With these tools configured:
+- **Beads** tracks issues locally in git, synced to Linear
+- **Linear MCP** lets Claude query/update Linear directly
+- **Notion MCP** lets Claude access your Notion workspace
 
-This creates a powerful workflow where AI assistance is integrated with your project management.
+This creates a powerful workflow where AI assistance integrates with your project management tools.
