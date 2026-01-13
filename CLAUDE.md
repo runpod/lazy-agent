@@ -45,6 +45,7 @@ which zsh && echo "Zsh: installed" || echo "Zsh: not installed"
 which tmux && echo "Tmux: installed" || echo "Tmux: not installed"
 which nvim && echo "Neovim: installed" || echo "Neovim: not installed"
 ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: installed" || echo "Ghostty: not installed"
+ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
 ```
 
 Based on results, customize the journey. Skip steps they've already completed.
@@ -75,6 +76,7 @@ Read these in order (skip completed steps):
 10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL]**
 11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK]**
 12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED]**
+13. `steps/13-karabiner.md` - Keyboard customization (Caps Lock → Escape + tmux prefix) **[RECOMMENDED]**
 
 ### Handling Optional vs Quick Steps
 
@@ -126,6 +128,9 @@ bat --version
 eza --version
 jq --version
 http --version
+
+# Karabiner-Elements
+ls /Applications/Karabiner-Elements.app
 ```
 
 ## Handling Problems
@@ -219,11 +224,18 @@ When guiding users through gcalcli setup (step 10), this requires an **interacti
 
 ## Key Bindings to Teach
 
-From the dotfiles `.tmux.conf`:
+### Karabiner (if installed)
 
 | Action | Keybinding | Notes |
 |--------|------------|-------|
-| Prefix | `Ctrl+b` | All tmux commands start with this |
+| Escape | Tap `Caps Lock` | Great for vim - no reaching for Esc |
+| Tmux prefix | `Caps Lock + A` | Much easier than Ctrl+B |
+
+### Tmux (from dotfiles `.tmux.conf`)
+
+| Action | Keybinding | Notes |
+|--------|------------|-------|
+| Prefix | `Ctrl+b` (or `Caps+A`) | All tmux commands start with this |
 | Split horizontal | `Prefix + -` | Creates pane below |
 | Split vertical | `Prefix + \|` | Creates pane to the right |
 | Navigate panes | `Ctrl+h/j/k/l` | Vim-style, works with Neovim too |
