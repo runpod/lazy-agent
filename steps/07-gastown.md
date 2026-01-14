@@ -1,5 +1,35 @@
 # Step 7: Gastown - Multi-Agent Workspaces
 
+> **DANGER: EXPERIMENTAL MULTI-AGENT SOFTWARE**
+>
+> **THIS STEP IS NOT PART OF THE NORMAL ONBOARDING FLOW.**
+>
+> Gastown is experimental software that gives MULTIPLE AI agents significant
+> autonomy over your codebase. This can result in:
+>
+> - Unexpected file modifications, deletions, or creations
+> - Difficult-to-review changes from multiple sources
+> - Potential data loss if not using proper git hygiene
+> - Runaway agents making unwanted changes
+>
+> **DO NOT INSTALL unless you:**
+> 1. Fully understand multi-agent coordination risks
+> 2. Are working on a test/sandbox project only
+> 3. Have a git branch you can completely discard
+> 4. Accept full responsibility for all agent-generated changes
+
+---
+
+## Required Acknowledgement
+
+Before proceeding, you must confirm you understand the risks:
+
+**Type exactly:** `I understand the risks of multi-agent software`
+
+**DO NOT proceed until the user types this acknowledgement.**
+
+---
+
 ## What is Gastown?
 
 Gastown (`gt`) is a tool for managing multi-agent AI workspaces called "rigs". It coordinates:

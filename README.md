@@ -53,9 +53,12 @@ Claude will read your config and guide you through a personalized setup.
 - **Linear MCP** - Let Claude manage Linear issues
 - **gcalcli** - Google Calendar in terminal
 
-### Multi-Agent Tools
-- **Gastown** - Coordinate multiple Claude sessions
+### Multi-Agent Tools (Advanced)
+- **Gastown** - Coordinate multiple Claude sessions **[EXPERIMENTAL - USE WITH CAUTION]**
 - **Beads** - Git-backed issue tracking with Linear sync
+
+> **Warning**: Gastown is experimental software that gives AI agents significant
+> autonomy. Only use on test projects and always work in a discardable git branch.
 
 ## What You'll Learn
 

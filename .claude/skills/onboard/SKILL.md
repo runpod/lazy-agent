@@ -23,6 +23,7 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-gcalcli` | If user wants Google Calendar CLI |
 | `/setup-linear` | If user wants Linear integration |
 | `/setup-notion` | If user wants Notion integration |
+| `/setup-claude-project` | Setting up Claude Code best practices for any project |
 
 ## Configuration
 
@@ -140,7 +141,14 @@ npx playwright install chromium
 #### gcalcli (`optional_tools.gcalcli`)
 **Use the `/setup-gcalcli` skill** - this needs interactive OAuth walkthrough.
 
-#### Gastown (`optional_tools.gastown`)
+#### Gastown (`optional_tools.gastown`) - EXPERIMENTAL
+
+> **WARNING: DO NOT install Gastown during normal onboarding.**
+>
+> Gastown is experimental multi-agent software. Only offer if user EXPLICITLY asks.
+> If they ask, require them to type: "I understand the risks of multi-agent software"
+> before proceeding. See `steps/07-gastown.md` for full warnings.
+
 ```bash
 go install github.com/steveyegge/gastown/cmd/gt@latest
 ```
@@ -167,6 +175,13 @@ After everything is set up:
    - `Ctrl+A |` - Split pane
    - `Ctrl+h/j/k/l` - Navigate
 4. Remind them about `/tmux-tutorial` if they want to practice more
+5. **Offer to set up Claude Code best practices for their projects:**
+
+Say: "Now that your environment is ready, would you like to learn how to set up
+Claude Code best practices for your projects? This includes creating CLAUDE.md
+files, custom skills, and workflows that make Claude more effective."
+
+If yes, **use the `/setup-claude-project` skill**.
 
 ## Your Personality
 
