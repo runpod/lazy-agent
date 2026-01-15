@@ -160,7 +160,7 @@ brew install --cask docker
 
 #### Browser Agent (`optional_tools.browser_agent`)
 ```bash
-npm install -g @anthropic/agent-browser
+npm install -g agent-browser
 npx playwright install chromium
 ```
 
