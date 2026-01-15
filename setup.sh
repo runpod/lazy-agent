@@ -155,8 +155,8 @@ INSTALL_GCALCLI=$(confirm "gcalcli? (Google Calendar in terminal)" "$PREV_GCALCL
 echo ""
 echo -e "${CYAN}=== Claude Code Extensions ===${NC}"
 
-echo -e "${DIM}~1 min, npm install${NC}"
-INSTALL_CLAUDE_YOLO=$(confirm "claude-yolo? (YOLO mode wrapper for unattended execution)" "$PREV_YOLO")
+echo -e "${DIM}~10 sec, shell alias${NC}"
+INSTALL_CLAUDE_YOLO=$(confirm "clyolo alias? (claude --dangerously-skip-permissions)" "$PREV_YOLO")
 
 echo -e "${DIM}~1 min, Homebrew install${NC}"
 INSTALL_CLAUDE_NOTIFY=$(confirm "claude-notify? (Desktop notifications when Claude finishes)" "$PREV_NOTIFY")

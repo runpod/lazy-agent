@@ -99,7 +99,12 @@ check "httpie" "http" "brew install httpie (optional)"
 
 echo ""
 echo -e "${CYAN}=== Claude Code Extensions ===${NC}"
-check "claude-yolo" "cl" "npm install -g claude-yolo (optional)"
+# Check for clyolo alias
+if alias clyolo &>/dev/null 2>&1 || grep -q 'alias clyolo' ~/.zshrc 2>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} clyolo alias"
+else
+    echo -e "  ${YELLOW}○${NC} clyolo alias ${DIM}- add to ~/.zshrc: alias clyolo=\"claude --dangerously-skip-permissions\"${NC}"
+fi
 check "claude-notify" "cn" "brew install mylee04/tap/claude-notify (optional)"
 
 echo ""

@@ -47,7 +47,7 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-notion` | If user wants Notion integration |
 | `/setup-claude-project` | Setting up Claude Code best practices for any project |
 | `/agent-skills` | Learning about skills, creating new skills, understanding skill discovery |
-| `/setup-claude-yolo` | Installing YOLO mode wrapper |
+| `/setup-claude-yolo` | Adding clyolo alias for YOLO mode |
 | `/setup-claude-notify` | Setting up desktop notifications |
 | `/setup-gsd` | Installing meta-prompting system |
 
@@ -190,8 +190,8 @@ brew install steveyegge/beads/bd
 #### Notion MCP (`optional_tools.notion_mcp`)
 **Use the `/setup-notion` skill**.
 
-#### claude-yolo (`optional_tools.claude_yolo`)
-**Use the `/setup-claude-yolo` skill** - YOLO mode wrapper for unattended execution.
+#### clyolo (`optional_tools.claude_yolo`)
+**Use the `/setup-claude-yolo` skill** - adds `clyolo` alias for `claude --dangerously-skip-permissions`.
 
 #### claude-notify (`optional_tools.claude_notify`)
 **Use the `/setup-claude-notify` skill** - desktop notifications for long tasks.

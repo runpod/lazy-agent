@@ -1,118 +1,67 @@
 # Claude YOLO Setup
 
-Install and configure claude-yolo - a wrapper for managing YOLO and SAFE modes in Claude Code.
+Add a simple alias for running Claude Code in YOLO mode (no permission prompts).
 
-**Time estimate: 2-3 minutes**
-
----
-
-## What is Claude YOLO?
-
-Say: "Claude YOLO is a wrapper that lets you toggle between two modes:"
-
-- **YOLO Mode** `[YOLO]` (yellow) - Bypasses safety confirmations for autonomous operation
-- **SAFE Mode** `[SAFE]` (cyan) - Standard Claude Code with all safety checks
-
-Say: "Think of YOLO mode as 'full auto' - Claude won't ask for permission before running commands or editing files. Useful for trusted tasks, but use with caution."
+**Time estimate: 30 seconds**
 
 ---
 
-## Step 1: Check Prerequisites
+## What is YOLO Mode?
 
-```bash
-node --version && npm --version
-```
+Say: "YOLO mode runs Claude with `--dangerously-skip-permissions` - no confirmation prompts for commands or file edits."
 
-Say: "You need Node.js and npm installed. If not, install with `brew install node`."
+Say: "It's great for trusted tasks where you want Claude to work autonomously."
 
 ---
 
-## Step 2: Install claude-yolo
+## Step 1: Add the Alias
+
+Say: "Let's add a `clyolo` alias to your shell config."
 
 ```bash
-npm install -g claude-yolo
+echo 'alias clyolo="claude --dangerously-skip-permissions"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-Ask: "Did it install successfully?"
+Ask: "Done? You now have `clyolo` available."
 
 ---
 
-## Step 3: First Run Consent
-
-Say: "On first run, you'll see a consent prompt about YOLO mode's security implications."
+## Step 2: Verify It Works
 
 ```bash
-cl /STATUS
+which clyolo || alias clyolo
 ```
 
-Say: "Read the warning carefully and type 'yes' to accept if you understand the risks."
-
-Ask: "Did you complete the consent prompt?"
+Say: "You should see the alias defined."
 
 ---
 
-## Step 4: Understanding the Modes
-
-Say: "The `cl` command is your wrapper for Claude with mode control:"
-
-### Start in YOLO Mode
-```bash
-cl /YON
-```
-Say: "This enables YOLO mode and starts Claude. You'll see `[YOLO]` in yellow."
-
-### Start in SAFE Mode
-```bash
-cl /YOFF
-```
-Say: "This enables SAFE mode and starts Claude. You'll see `[SAFE]` in cyan."
-
-### Check Current Mode
-```bash
-cl /STATUS
-```
-Say: "Shows your current mode without starting Claude."
-
----
-
-## Step 5: Verify Installation
-
-```bash
-which cl
-cl /STATUS
-```
-
-Ask: "Do you see the mode status?"
-
----
-
-## Quick Reference
+## Usage
 
 | Command | Description |
 |---------|-------------|
-| `cl /YON` | Enable YOLO mode and start Claude |
-| `cl /YOFF` | Enable SAFE mode and start Claude |
-| `cl /STATUS` | Show current mode |
-| `cl /HELP` | Show help |
-| `cl` | Start Claude in current mode |
+| `clyolo` | Start Claude in YOLO mode (no prompts) |
+| `claude` | Start Claude normally (with prompts) |
 
 ---
 
-## When to Use Each Mode
+## When to Use YOLO Mode
 
-**Use YOLO mode when:**
+**Use `clyolo` when:**
 - Running trusted, well-understood tasks
 - You want maximum automation speed
 - Working in a sandboxed/disposable environment
+- Running long batch operations unattended
 
-**Use SAFE mode when:**
+**Use regular `claude` when:**
 - Working with sensitive files or data
 - Running unfamiliar operations
 - You want to review each action
 
 ---
 
-## Security Warning
+## Security Note
 
 Say: "Important: YOLO mode bypasses safety checks intentionally built into Claude Code."
 
@@ -121,16 +70,15 @@ In YOLO mode:
 - Claude won't ask before editing files
 - Claude can delete files without confirmation
 
-Say: "Always start in SAFE mode for new or sensitive work."
+Say: "Use regular `claude` for sensitive work."
 
 ---
 
 ## Wrap Up
 
-Say: "You're all set with claude-yolo! Remember:"
+Say: "That's it! Just remember:"
 
-- `cl /YON` for autonomous mode (use responsibly)
-- `cl /YOFF` for supervised mode (recommended default)
-- `cl /STATUS` to check your current mode
+- `clyolo` = autonomous mode (no prompts)
+- `claude` = normal mode (with prompts)
 
-Ask: "Any questions about YOLO vs SAFE mode?"
+Ask: "Any questions?"
