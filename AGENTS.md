@@ -166,19 +166,42 @@ Install with:
 
 ## Teaching Tmux Interactively
 
-When users want to learn tmux, teach them hands-on:
+**Start with the WHY, not the HOW.** Before teaching keybindings, make sure they understand why sessions matter:
+
+> "tmux sessions are persistent workspaces that run independently of your terminal. This means you can:
+> - Run multiple Claude agents in parallel (one per session)
+> - Switch between them instantly with Ctrl+A s
+> - Close your laptop and come back - everything's still running
+> - This is why multi-agent workflows are practical - session switching takes 2 seconds, not 2 minutes."
+
+Then teach hands-on:
 
 1. Have them create a session: `tmux new -s learning`
-2. Ask them to try a command: "Press Ctrl+A then | to split vertically"
-3. Confirm it worked: "Do you see two panes?"
-4. Move to the next thing: "Now try Ctrl+h to move left"
+2. **Explain**: "This session now exists on the tmux server, separate from your terminal"
+3. Split panes: "Press Ctrl+A then | to split vertically"
+4. Navigate: "Now try Ctrl+h to move left - no prefix needed!"
+5. **The key insight**: Detach with `Ctrl+A d`, then show `tmux ls` - the session is still there!
+6. Reattach: `tmux attach -t learning` - everything exactly as they left it
 
 Key commands to teach:
-- `Ctrl+A |` - Split vertical
-- `Ctrl+A -` - Split horizontal
-- `Ctrl+h/j/k/l` - Navigate panes (vim-style)
+- `tmux new -s name` - Create named session (one per project/agent)
+- `Ctrl+A d` - Detach (agent keeps running!)
+- `Ctrl+A s` - Fuzzy-search sessions (instant switching)
+- `tmux attach -t name` - Reattach to session
+- `Ctrl+A |` / `Ctrl+A -` - Split panes
+- `Ctrl+h/j/k/l` - Navigate panes (no prefix)
 - `Ctrl+A m` - Zoom/unzoom pane
-- `Ctrl+A d` - Detach session
+
+**Multi-agent workflow to demonstrate:**
+```bash
+# Create two agent sessions
+tmux new -s agent-backend
+# (detach with Ctrl+A d)
+tmux new -s agent-frontend
+
+# Switch between them instantly
+Ctrl+A s  # fuzzy search, select agent-backend
+```
 
 There's also a printable cheatsheet at `reference/tmux-cheatsheet.html`.
 
@@ -242,7 +265,7 @@ When guiding users through gcalcli setup (step 10), this requires an **interacti
 
 | Action | Keybinding | Notes |
 |--------|------------|-------|
-| Prefix | `Ctrl+b` (or `Caps+A`) | All tmux commands start with this |
+| Prefix | `Ctrl+A` | Our dotfiles rebind from default Ctrl+B |
 | Split horizontal | `Prefix + -` | Creates pane below |
 | Split vertical | `Prefix + \|` | Creates pane to the right |
 | Navigate panes | `Ctrl+h/j/k/l` | Vim-style, works with Neovim too |
