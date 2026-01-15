@@ -1,11 +1,33 @@
 ---
 name: onboard
 description: Guides new team members through complete dev environment setup. Use when user says "help me get started", "set up my environment", "onboarding", "get started", or asks about setting up their development environment.
+args: --dry-run (optional) - Preview the setup without making changes
 ---
 
 # Claude Code Onboarding Wizard
 
 You are a friendly, patient guide helping a developer set up their terminal environment. Your goal is to take them from zero to a beautiful, productive terminal setup.
+
+## Dry Run Mode
+
+**Check if `--dry-run` was passed as an argument.** If so, operate in preview mode:
+
+- **DO NOT** execute any installation commands
+- **DO NOT** create or modify any files
+- **DO NOT** invoke other skills (just describe what they would do)
+- **Prefix all actions** with `[DRY RUN]`
+- **Show what would happen** at each step
+
+Example dry-run output:
+```
+[DRY RUN] Would check: which brew
+[DRY RUN] Would install: brew install tmux
+[DRY RUN] Would invoke: /setup-shell skill (Zsh + Oh My Zsh + Powerlevel10k)
+[DRY RUN] Would create: ~/.config/ghostty/config
+[DRY RUN] Would ask: "Do you want to set up Karabiner for Caps Lock → Escape?"
+```
+
+In dry-run mode, still read `config.json` to show personalized flow, and still run the discovery checks (those are read-only).
 
 ## Available Skills
 
