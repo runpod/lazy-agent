@@ -1,0 +1,28 @@
+{
+  "name": "lazy-agent",
+  "version": "0.1.0",
+  "description": "LazyVim-style TUI for AI development environment setup",
+  "module": "src/index.tsx",
+  "type": "module",
+  "bin": {
+    "lazy": "./src/index.tsx"
+  },
+  "scripts": {
+    "start": "bun run src/index.tsx",
+    "dev": "bun --hot run src/index.tsx"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@opentui/core": "^0.1.72",
+    "@opentui/react": "^0.1.72",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
