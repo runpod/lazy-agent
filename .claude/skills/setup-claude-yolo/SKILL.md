@@ -1,34 +1,3 @@
-# Plan 02-01: Add claude-yolo skill
-
-## Goal
-
-Add claude-yolo YOLO mode wrapper to the lazy-agent onboarding tool as a new skill, providing installation guidance and usage documentation for managing Claude Code's permission bypass modes.
-
-## Context
-
-- **Phase**: 2 of 5 - Add claude-yolo
-- **Pattern to follow**: Existing skills in `.claude/skills/` (e.g., `setup-zoxide`, `setup-glow`)
-- **Key insight**: claude-yolo is an optional power-user tool that requires explicit consent due to security implications
-
-## Tasks
-
-- [x] Task 1: Create skill directory `.claude/skills/setup-claude-yolo/`
-- [x] Task 2: Create `SKILL.md` with installation and usage guide
-- [x] Task 3: Update `config.example.json` to add `claude_yolo: false` to optional_tools
-- [x] Task 4: Update `config.json` to add `claude_yolo: true` to optional_tools
-- [ ] Task 5: Commit changes
-
-## Files to Create/Modify
-
-| File | Action | Description |
-|------|--------|-------------|
-| `.claude/skills/setup-claude-yolo/SKILL.md` | Create | New skill with installation and usage guide |
-| `config.example.json` | Modify | Add `claude_yolo: false` to optional_tools |
-| `config.json` | Modify | Add `claude_yolo: true` to optional_tools |
-
-## SKILL.md Content
-
-```markdown
 # Claude YOLO Setup
 
 Install and configure claude-yolo - a wrapper for managing YOLO and SAFE modes in Claude Code.
@@ -165,14 +134,3 @@ Say: "You're all set with claude-yolo! Remember:"
 - `cl /STATUS` to check your current mode
 
 Ask: "Any questions about YOLO vs SAFE mode?"
-```
-
-## Verification
-
-- [x] `.claude/skills/setup-claude-yolo/SKILL.md` exists and follows skill pattern
-- [x] `config.example.json` includes `claude_yolo` in `optional_tools`
-- [x] `config.json` includes `claude_yolo` in `optional_tools`
-- [ ] Changes committed with descriptive message
-
----
-*Plan created: 2026-01-15*

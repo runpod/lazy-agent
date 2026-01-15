@@ -1,32 +1,3 @@
-# Plan 04-01: Add Get Shit Done skill
-
-## Goal
-
-Add Get Shit Done (GSD) meta-prompting system to the lazy-agent onboarding tool with a new skill file that guides users through installation and basic usage.
-
-## Context
-
-- **Phase**: 4 of 5 in v1.1 Developer Tools milestone
-- **Skill location**: `.claude/skills/setup-gsd/SKILL.md`
-- **Key insight**: GSD requires either `--dangerously-skip-permissions` or granular permission configuration
-
-## Tasks
-
-- [x] Task 1: Create skill directory `.claude/skills/setup-gsd/`
-- [x] Task 2: Create `SKILL.md` with installation and usage guide
-- [ ] Task 3: Update `.claude/skills/onboard/SKILL.md` to reference GSD
-- [ ] Task 4: Commit changes
-
-## Files to Create/Modify
-
-| File | Action | Description |
-|------|--------|-------------|
-| `.claude/skills/setup-gsd/SKILL.md` | Create | New skill with GSD installation guide |
-| `.claude/skills/onboard/SKILL.md` | Modify | Add GSD to available skills table |
-
-## SKILL.md Content
-
-```markdown
 # Get Shit Done Setup
 
 Install and configure Get Shit Done - a meta-prompting system that prevents context degradation in long Claude Code sessions.
@@ -185,14 +156,3 @@ Key takeaways:
 3. Each plan runs in fresh context - no quality degradation
 
 Ask: "Any questions about Get Shit Done?"
-```
-
-## Verification
-
-- [x] `.claude/skills/setup-gsd/SKILL.md` exists and follows skill patterns
-- [ ] Running `/setup-gsd` in Claude Code shows the installation guide
-- [ ] Onboard skill references GSD
-- [ ] Changes committed
-
----
-*Plan created: 2026-01-15*

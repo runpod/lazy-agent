@@ -1,36 +1,3 @@
-# Plan 03-01: Add claude-notify skill
-
-## Goal
-
-Add desktop notification support for Claude Code by creating a new skill `setup-claude-notify` that guides users through installation and configuration of claude-notify.
-
-## Context
-
-- **Phase**: 3 of 5 in v1.1 Developer Tools milestone
-- **Pattern reference**: Existing skills like `setup-zoxide`, `setup-karabiner`
-- **Tool info**: claude-notify provides desktop alerts when Claude Code tasks complete, errors occur, or input is needed
-
-## Tasks
-
-- [x] Task 1: Create skill directory `.claude/skills/setup-claude-notify/`
-- [x] Task 2: Create `SKILL.md` with installation and usage guide
-- [ ] Task 3: Update `.claude/skills/onboard/SKILL.md` to add claude-notify to Available Skills table
-- [ ] Task 4: Update `config.json` to add `claude_notify` to optional_tools
-- [ ] Task 5: Update `CLAUDE.md` Verification Commands section
-- [ ] Task 6: Commit changes
-
-## Files to Create/Modify
-
-| File | Action | Description |
-|------|--------|-------------|
-| `.claude/skills/setup-claude-notify/SKILL.md` | Create | New skill with installation guide |
-| `.claude/skills/onboard/SKILL.md` | Modify | Add to Available Skills table |
-| `config.json` | Modify | Add `claude_notify: true` to optional_tools |
-| `CLAUDE.md` | Modify | Add verification command |
-
-## SKILL.md Content
-
-```markdown
 # Claude-Notify Setup
 
 Get desktop notifications when Claude Code finishes tasks, encounters errors, or needs input.
@@ -134,15 +101,3 @@ Say: "That's it! Now you can let Claude work in the background and you'll be not
 Say: "This is especially useful with tmux - start Claude in one pane, work in another, and get notified when it's done."
 
 Ask: "Any questions about claude-notify?"
-```
-
-## Verification
-
-- [x] `.claude/skills/setup-claude-notify/SKILL.md` exists
-- [ ] Onboard skill references the new skill
-- [ ] `config.json` includes `claude_notify` in optional_tools
-- [ ] `CLAUDE.md` includes verification command
-- [ ] Changes committed
-
----
-*Plan created: 2026-01-15*

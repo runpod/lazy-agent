@@ -25,6 +25,9 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-notion` | If user wants Notion integration |
 | `/setup-claude-project` | Setting up Claude Code best practices for any project |
 | `/agent-skills` | Learning about skills, creating new skills, understanding skill discovery |
+| `/setup-claude-yolo` | Installing YOLO mode wrapper |
+| `/setup-claude-notify` | Setting up desktop notifications |
+| `/setup-gsd` | Installing meta-prompting system |
 
 ## Configuration
 
@@ -164,6 +167,15 @@ brew install steveyegge/beads/bd
 
 #### Notion MCP (`optional_tools.notion_mcp`)
 **Use the `/setup-notion` skill**.
+
+#### claude-yolo (`optional_tools.claude_yolo`)
+**Use the `/setup-claude-yolo` skill** - YOLO mode wrapper for unattended execution.
+
+#### claude-notify (`optional_tools.claude_notify`)
+**Use the `/setup-claude-notify` skill** - desktop notifications for long tasks.
+
+#### Get Shit Done (`optional_tools.get_shit_done`)
+**Use the `/setup-gsd` skill** - meta-prompting for structured projects.
 
 ### Phase 4: Wrap Up
 

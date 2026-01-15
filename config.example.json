@@ -18,7 +18,10 @@
       "gastown": false,
       "beads": false,
       "linear_mcp": false,
-      "notion_mcp": false
+      "notion_mcp": false,
+      "claude_yolo": false,
+      "claude_notify": true,
+      "get_shit_done": false
     }
   },
   "preferences": {
