@@ -47,6 +47,7 @@ Claude will read your config and guide you through a personalized setup.
 - **GitHub CLI** - PRs, issues, actions from terminal
 - **Browser Agent** - AI-friendly browser automation
 - **Docker** - Container runtime
+- **Neovim + LazyVim** - Modern terminal editor (optional, for vim enthusiasts)
 
 ### Optional Integrations
 - **Notion MCP** - Let Claude search your Notion docs

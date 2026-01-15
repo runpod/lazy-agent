@@ -23,6 +23,7 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-gcalcli` | If user wants Google Calendar CLI |
 | `/setup-linear` | If user wants Linear integration |
 | `/setup-notion` | If user wants Notion integration |
+| `/setup-neovim` | Neovim + LazyVim setup (optional, advanced) |
 | `/setup-claude-project` | Setting up Claude Code best practices for any project |
 
 ## Configuration
@@ -131,6 +132,11 @@ gh auth login
 ```bash
 brew install --cask docker
 ```
+
+#### Neovim + LazyVim (`optional_tools.neovim`)
+Say: "This is optional and has a steep learning curve. Only recommended if you're interested in vim-style editing."
+
+**Use the `/setup-neovim` skill** - includes full LazyVim setup and tutorial.
 
 #### Browser Agent (`optional_tools.browser_agent`)
 ```bash
