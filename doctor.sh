@@ -98,6 +98,7 @@ check "jq" "jq" "brew install jq (optional)"
 check "httpie" "http" "brew install httpie (optional)"
 check "zoxide" "zoxide" "brew install zoxide (optional)"
 check "glow" "glow" "brew install glow (optional)"
+check "mprocs" "mprocs" "brew install mprocs (optional)"
 check "browser-agent" "agent-browser" "npm install -g agent-browser (optional)"
 
 echo ""
