@@ -85,7 +85,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: Add mprocs to setup.sh, doctor.sh, config.example.json
+- [x] 06-01: Add mprocs to setup.sh, doctor.sh, config.example.json
 
 #### Phase 7: Create /fork skill
 **Goal**: Create skill that spawns N parallel Claude instances with cloned workspaces
@@ -106,5 +106,5 @@ Plans:
 | 3. Add claude-notify | v1.1 | 1/1 | Complete | 2026-01-15 |
 | 4. Add Get Shit Done | v1.1 | 1/1 | Complete | 2026-01-15 |
 | 5. Onboarding updates | v1.1 | 1/1 | Complete | 2026-01-15 |
-| 6. Add mprocs to setup | v1.2 | 0/1 | Not started | - |
+| 6. Add mprocs to setup | v1.2 | 1/1 | Complete | 2026-01-16 |
 | 7. Create /fork skill | v1.2 | 0/1 | Not started | - |
