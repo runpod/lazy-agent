@@ -1,3 +1,9 @@
+---
+name: fork
+description: Spawn multiple parallel Claude instances to explore different approaches simultaneously.
+args: N "prompt" [paths...] - N instances (2-6), task prompt, optional paths to clone
+---
+
 # Fork - Parallel Claude Instances
 
 Spawn multiple Claude instances to explore different approaches in parallel using mprocs.
