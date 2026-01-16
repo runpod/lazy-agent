@@ -6,33 +6,34 @@ args: N "prompt" [paths...] - N instances (2-6), task prompt, optional paths to 
 
 # Fork - Parallel Claude Instances
 
-Spawn multiple Claude instances to explore different approaches in parallel using mprocs.
+Spawn multiple Claude instances in a tmux session running mprocs for side-by-side exploration.
 
-**Syntax**: `/fork N [prompt] [paths...]`
+**Syntax**: `/fork N "prompt" [paths...]`
 
-**Time estimate**: Setup takes ~30 seconds per instance
+**Time estimate**: Setup takes ~10 seconds
 
 ---
 
 ## Prerequisites
 
-Check if mprocs is installed:
+Check if mprocs and tmux are installed:
 
 ```bash
-which mprocs || echo "mprocs not found"
+which mprocs && which tmux
 ```
 
-If not installed, say: "mprocs is required for /fork. Install it with `brew install mprocs`."
+If mprocs not installed: "mprocs is required for /fork. Install it with `brew install mprocs`."
+If tmux not installed: "tmux is required for /fork. Install it with `brew install tmux`."
 
-Stop and ask the user to install mprocs before proceeding.
+Stop and ask the user to install missing tools before proceeding.
 
 ---
 
 ## What is /fork?
 
-Say: "/fork spawns multiple isolated Claude instances, each working on a copy of your code in parallel."
+Say: "/fork spawns multiple isolated Claude instances inside a tmux session, each working on a git worktree copy of your code in parallel."
 
-Say: "This lets you explore different approaches simultaneously - like having multiple developers brainstorm at once."
+Say: "This lets you explore different approaches simultaneously - like having multiple developers brainstorm at once. Each instance has full git history."
 
 ---
 
@@ -43,7 +44,7 @@ Extract from the user's /fork command:
 | Argument | Required | Default | Valid Range |
 |----------|----------|---------|-------------|
 | `N` | Yes | - | 2-6 instances |
-| `prompt` | Yes | - | Non-empty string |
+| `prompt` | Yes | - | Non-empty string in quotes |
 | `paths` | No | Current directory | Valid paths |
 
 **Validation:**
@@ -57,102 +58,154 @@ Example commands:
 
 ---
 
-## Step 2: Create Temp Workspaces
+## Step 2: Generate Session ID
 
-Say: "Creating isolated workspaces for each Claude instance..."
-
-For each instance, create an isolated workspace:
+Create a short, memorable session ID:
 
 ```bash
-# Create temp directory for this fork session
-FORK_SESSION=$(mktemp -d -t fork-XXXXXX)
-echo "Fork session: $FORK_SESSION"
+# Generate short random ID (e.g., "a3f7")
+FORK_ID=$(head -c 4 /dev/urandom | xxd -p | head -c 4)
+FORK_SESSION="fork-$FORK_ID"
+FORK_DIR="/tmp/$FORK_SESSION"
 
-# Get the source path(s) - default to current directory
-SOURCE_PATHS="${paths:-$(pwd)}"
+echo "Session ID: $FORK_SESSION"
+echo "Workspace: $FORK_DIR"
+```
 
-# For each instance 1..N:
+---
+
+## Step 3: Create Workspaces with Git Worktree
+
+Say: "Creating isolated git worktrees for each Claude instance..."
+
+Check if we're in a git repo:
+
+```bash
+if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Git repo detected - using worktrees"
+    USE_WORKTREE=true
+else
+    echo "Not a git repo - using copy"
+    USE_WORKTREE=false
+fi
+```
+
+**If git repo (preferred):**
+
+```bash
+mkdir -p "$FORK_DIR"
+SOURCE_PATH="$(pwd)"
+
 for i in $(seq 1 $N); do
-    WORKSPACE="$FORK_SESSION/instance-$i"
+    WORKSPACE="$FORK_DIR/claude-$i"
+    git worktree add "$WORKSPACE" --detach HEAD
+    echo "Created worktree: $WORKSPACE"
+done
+```
+
+**If not a git repo (fallback):**
+
+```bash
+mkdir -p "$FORK_DIR"
+SOURCE_PATH="$(pwd)"
+
+for i in $(seq 1 $N); do
+    WORKSPACE="$FORK_DIR/claude-$i"
     mkdir -p "$WORKSPACE"
-
-    # Clone specified paths (or current dir) into workspace
-    for path in $SOURCE_PATHS; do
-        if [ -d "$path" ]; then
-            cp -R "$path" "$WORKSPACE/"
-        elif [ -f "$path" ]; then
-            cp "$path" "$WORKSPACE/"
-        fi
-    done
-
-    echo "Created workspace: $WORKSPACE"
+    cp -R "$SOURCE_PATH"/* "$WORKSPACE/" 2>/dev/null || true
+    echo "Created copy: $WORKSPACE"
 done
 ```
 
 ---
 
-## Step 3: Generate mprocs.yaml
+## Step 4: Generate mprocs.yaml
 
-Create a mprocs configuration file dynamically:
+Create the mprocs configuration with descriptive names.
+
+**IMPORTANT**: Use `claude --dangerously-skip-permissions` to avoid permission prompts blocking execution.
 
 ```bash
-# Generate mprocs config
-cat > "$FORK_SESSION/mprocs.yaml" << EOF
+cat > "$FORK_DIR/mprocs.yaml" << 'HEADER'
 procs:
-EOF
+HEADER
 
-# Add each instance
 for i in $(seq 1 $N); do
-    cat >> "$FORK_SESSION/mprocs.yaml" << EOF
-  instance-$i:
-    cwd: "$FORK_SESSION/instance-$i"
-    shell: "claude \"$PROMPT\""
+    cat >> "$FORK_DIR/mprocs.yaml" << EOF
+  claude-$i:
+    cwd: "$FORK_DIR/claude-$i"
+    shell: "claude --dangerously-skip-permissions '$PROMPT'"
 EOF
 done
 
-echo "Generated mprocs config at: $FORK_SESSION/mprocs.yaml"
+echo "Config: $FORK_DIR/mprocs.yaml"
 ```
 
 ---
 
-## Step 4: Launch mprocs
+## Step 5: Launch in tmux
 
-Say: "Launching $N parallel Claude instances..."
+Create a detached tmux session running mprocs:
 
 ```bash
-mprocs --config "$FORK_SESSION/mprocs.yaml"
+tmux new-session -d -s "$FORK_SESSION" -c "$FORK_DIR" "mprocs --config $FORK_DIR/mprocs.yaml"
 ```
-
-Say: "Use these controls in mprocs:"
-
-| Key | Action |
-|-----|--------|
-| `Tab` | Switch between instances |
-| `1-6` | Jump to specific instance |
-| `q` | Quit all instances |
-| `Ctrl+C` | Kill current instance |
-
-Say: "Each instance works on its own isolated copy of the workspace."
 
 ---
 
-## Step 5: After Completion
+## Step 6: Display Instructions
 
-When mprocs exits, inform the user:
+Say: "Fork session ready!"
 
-Say: "Fork session complete!"
+Display this info block:
 
 ```
-Workspaces are at: $FORK_SESSION
-
-instance-1/ through instance-N/ contain each Claude's work.
+╔════════════════════════════════════════════════════════════╗
+║  Fork Session: {FORK_SESSION}                              ║
+╠════════════════════════════════════════════════════════════╣
+║                                                            ║
+║  To start:   tmux attach -t {FORK_SESSION}                 ║
+║                                                            ║
+║  Controls:                                                 ║
+║    Tab      - Switch between Claude instances              ║
+║    1-{N}    - Jump to specific instance                    ║
+║    q        - Quit mprocs (ends session)                   ║
+║    Ctrl+b d - Detach (keep running in background)          ║
+║                                                            ║
+║  Workspaces: {FORK_DIR}/                                   ║
+║    claude-1/ through claude-{N}/ (git worktrees)           ║
+║                                                            ║
+║  Cleanup:    ./cleanup-fork.sh (generated below)           ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
 ```
 
-Say: "Next steps:"
-1. Compare results in each instance directory
-2. Cherry-pick the best approach
-3. Copy successful changes back to your project
-4. Clean up with: `rm -rf $FORK_SESSION`
+Also generate a cleanup script:
+
+```bash
+cat > "$FORK_DIR/cleanup-fork.sh" << EOF
+#!/bin/bash
+# Cleanup script for $FORK_SESSION
+
+# Kill tmux session
+tmux kill-session -t $FORK_SESSION 2>/dev/null
+
+# Remove git worktrees
+cd $SOURCE_PATH
+for i in $(seq 1 $N); do
+    git worktree remove "$FORK_DIR/claude-\$i" --force 2>/dev/null
+done
+
+# Remove temp directory
+rm -rf $FORK_DIR
+
+echo "Cleaned up $FORK_SESSION"
+EOF
+chmod +x "$FORK_DIR/cleanup-fork.sh"
+echo "Cleanup script: $FORK_DIR/cleanup-fork.sh"
+```
+
+Replace `{FORK_SESSION}`, `{FORK_DIR}`, and `{N}` with actual values.
 
 ---
 
@@ -162,7 +215,16 @@ Say: "Next steps:"
 |---------|-------------|
 | `/fork 3 "task"` | 3 instances on current dir |
 | `/fork 2 "task" ./src` | 2 instances on ./src only |
-| `/fork 4 "explore options" .` | 4 instances on current dir explicitly |
+
+**Attach to session:**
+```bash
+tmux attach -t fork-XXXX
+```
+
+**List fork sessions:**
+```bash
+tmux ls | grep fork
+```
 
 **In mprocs:**
 
@@ -170,28 +232,45 @@ Say: "Next steps:"
 |-----|--------|
 | `Tab` | Switch between instances |
 | `1-6` | Jump to instance by number |
-| `q` | Quit all instances |
+| `q` | Quit mprocs and session |
 
----
+**In tmux:**
 
-## Limitations
-
-- **Maximum 6 instances** - screen real estate constraint
-- **Large directories take time to clone** - consider specifying specific paths
-- **Each instance is independent** - no automatic result merging
-- **No git history** - cloned workspaces don't include .git by default
+| Key | Action |
+|-----|--------|
+| `Ctrl+b d` | Detach (keep running) |
+| `Ctrl+b &` | Kill session |
 
 ---
 
 ## Cleanup
 
-Temp workspaces persist after the session ends. To clean up:
+Run the generated cleanup script:
 
 ```bash
-# Remove specific session (path shown when fork started)
-rm -rf /tmp/fork-XXXXXX
+/tmp/fork-XXXX/cleanup-fork.sh
+```
 
-# Remove all fork sessions
+Or manually:
+
+```bash
+# Kill the tmux session
+tmux kill-session -t fork-XXXX
+
+# Remove git worktrees (from original repo directory)
+git worktree remove /tmp/fork-XXXX/claude-1 --force
+git worktree remove /tmp/fork-XXXX/claude-2 --force
+# ... for each instance
+
+# Remove the temp directory
+rm -rf /tmp/fork-XXXX
+```
+
+Clean up all fork sessions:
+
+```bash
+tmux ls | grep fork | cut -d: -f1 | xargs -I{} tmux kill-session -t {}
+git worktree list | grep /tmp/fork | awk '{print $1}' | xargs -I{} git worktree remove {} --force
 rm -rf /tmp/fork-*
 ```
 
@@ -202,17 +281,21 @@ rm -rf /tmp/fork-*
 **"mprocs not found"**
 - Install with: `brew install mprocs`
 
-**"Permission denied"**
-- Check that source paths are readable
-- Ensure /tmp is writable
+**"tmux not found"**
+- Install with: `brew install tmux`
 
-**"Too many instances"**
-- Maximum is 6 instances
-- Reduce N and try again
+**"duplicate session"**
+- A session with that name already exists
+- Run `tmux ls` to see existing sessions
+- Kill it with `tmux kill-session -t fork-XXXX`
 
-**"Workspace creation failed"**
-- Check disk space
-- Verify paths exist
+**"can't attach"**
+- Session may have ended (mprocs quit)
+- Check with `tmux ls | grep fork`
+
+**"fatal: not a git repository"**
+- The skill falls back to cp -R for non-git directories
+- Git worktrees only work inside git repos
 
 ---
 
@@ -222,31 +305,36 @@ rm -rf /tmp/fork-*
 User: /fork 3 "implement user authentication"
 
 Claude: Checking prerequisites...
-mprocs: /opt/homebrew/bin/mprocs
+✓ mprocs: /opt/homebrew/bin/mprocs
+✓ tmux: /opt/homebrew/bin/tmux
 
-Creating isolated workspaces...
-Fork session: /tmp/fork-abc123
-Created workspace: /tmp/fork-abc123/instance-1
-Created workspace: /tmp/fork-abc123/instance-2
-Created workspace: /tmp/fork-abc123/instance-3
+Git repo detected - using worktrees
+Creating isolated git worktrees...
+Session ID: fork-a3f7
+Created worktree: /tmp/fork-a3f7/claude-1
+Created worktree: /tmp/fork-a3f7/claude-2
+Created worktree: /tmp/fork-a3f7/claude-3
 
-Launching 3 parallel Claude instances...
+Fork session ready!
 
-[mprocs UI appears with 3 Claude instances]
-
-User: [after working in mprocs, presses 'q' to quit]
-
-Claude: Fork session complete!
-
-Workspaces are at: /tmp/fork-abc123
-
-Compare the results:
-- instance-1/ - Session 1's approach
-- instance-2/ - Session 2's approach
-- instance-3/ - Session 3's approach
-
-Cherry-pick the best solution and copy it back to your project.
-Clean up when done: rm -rf /tmp/fork-abc123
+╔════════════════════════════════════════════════════════════╗
+║  Fork Session: fork-a3f7                                   ║
+╠════════════════════════════════════════════════════════════╣
+║                                                            ║
+║  To start:   tmux attach -t fork-a3f7                      ║
+║                                                            ║
+║  Controls:                                                 ║
+║    Tab      - Switch between Claude instances              ║
+║    1-3      - Jump to specific instance                    ║
+║    q        - Quit mprocs (ends session)                   ║
+║    Ctrl+b d - Detach (keep running in background)          ║
+║                                                            ║
+║  Workspaces: /tmp/fork-a3f7/                               ║
+║    claude-1/ through claude-3/ (git worktrees)             ║
+║                                                            ║
+║  Cleanup:    /tmp/fork-a3f7/cleanup-fork.sh                ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
 ```
 
 ---
@@ -257,3 +345,28 @@ Clean up when done: rm -rf /tmp/fork-abc123
 - **Race conditions**: Have multiple Claudes tackle the same problem differently
 - **A/B testing**: Compare implementation approaches before committing
 - **Learning**: See multiple valid solutions to understand tradeoffs
+- **Full git history**: Each worktree has complete git access for commits, branches, etc.
+
+---
+
+## Adding /fork to Your Project
+
+To add this skill to another project:
+
+```bash
+# From your project root
+mkdir -p .claude/skills/fork
+curl -o .claude/skills/fork/SKILL.md https://raw.githubusercontent.com/justinwlin/lazy-agent/main/.claude/skills/fork/SKILL.md
+```
+
+Or copy the entire skill directory:
+
+```bash
+cp -R /path/to/lazy-agent/.claude/skills/fork /your/project/.claude/skills/
+```
+
+Make sure mprocs and tmux are installed:
+
+```bash
+brew install mprocs tmux
+```
