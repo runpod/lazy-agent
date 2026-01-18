@@ -2,19 +2,16 @@
 # https://ghostty.org/docs/config
 
 # Font - using Nerd Font for terminal icons
-font-family = "JetBrainsMono Nerd Font"
+font-family = "MesloLGS Nerd Font"
 font-size = 14
-
-# Fallback fonts for special characters
-font-family = "Symbols Nerd Font Mono"
 
 # Window appearance
 window-padding-x = 12
 window-padding-y = 12
 window-decoration = true
 
-# Theme
-theme = dark
+# Theme (using built-in)
+theme = GruvboxDark
 
 # Cursor
 cursor-style = block
@@ -32,9 +29,6 @@ shell-integration = zsh
 # Clipboard
 clipboard-read = allow
 clipboard-write = allow
-
-# Performance
-vsync = true
 
 # Keybindings
 # Note: Most navigation is handled by tmux
