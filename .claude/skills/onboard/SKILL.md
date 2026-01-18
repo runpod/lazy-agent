@@ -50,6 +50,8 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-claude-yolo` | Adding clyolo alias for YOLO mode |
 | `/setup-claude-notify` | Setting up desktop notifications |
 | `/setup-gsd` | Installing meta-prompting system |
+| `/fork` | Spawn multiple parallel Claude instances |
+| `/code-simplifier` | Simplify and refine code for clarity and maintainability |
 
 ## Configuration
 
