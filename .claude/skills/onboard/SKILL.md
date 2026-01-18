@@ -43,9 +43,10 @@ The config tells you:
 
 ### Phase 1: Discovery
 
-Check what's already installed:
+**IMPORTANT: Always verify before installing.** Check what's already installed first:
 
 ```bash
+# Core tools
 which brew && echo "Homebrew: ✓" || echo "Homebrew: ✗"
 which git && echo "Git: ✓" || echo "Git: ✗"
 which zsh && echo "Zsh: ✓" || echo "Zsh: ✗"
@@ -53,9 +54,23 @@ which tmux && echo "Tmux: ✓" || echo "Tmux: ✗"
 which claude && echo "Claude Code: ✓" || echo "Claude Code: ✗"
 ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: ✓" || echo "Ghostty: ✗"
 ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: ✓" || echo "Karabiner: ✗"
+
+# Optional tools
+which fzf && echo "fzf: ✓" || echo "fzf: ✗"
+which lazygit && echo "lazygit: ✓" || echo "lazygit: ✗"
+which gh && echo "GitHub CLI: ✓" || echo "GitHub CLI: ✗"
+which docker && echo "Docker: ✓" || echo "Docker: ✗"
+which agent-browser && echo "Browser Agent: ✓" || echo "Browser Agent: ✗"
+which gcalcli && echo "gcalcli: ✓" || echo "gcalcli: ✗"
+ls ~/.oh-my-zsh/custom/plugins/zsh-z 2>/dev/null && echo "zsh-z: ✓" || echo "zsh-z: ✗"
+
+# MCP servers
+claude mcp list 2>/dev/null | grep -q playwright && echo "Playwright MCP: ✓" || echo "Playwright MCP: ✗"
+claude mcp list 2>/dev/null | grep -q linear && echo "Linear MCP: ✓" || echo "Linear MCP: ✗"
+claude mcp list 2>/dev/null | grep -q notion && echo "Notion MCP: ✓" || echo "Notion MCP: ✗"
 ```
 
-Skip steps they've already completed.
+**Skip steps they've already completed.** Never reinstall something that's already working.
 
 ### Phase 2: Core Setup
 

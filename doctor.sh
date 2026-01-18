@@ -97,6 +97,7 @@ check "bat" "bat" "brew install bat (optional)"
 check "eza" "eza" "brew install eza (optional)"
 check "jq" "jq" "brew install jq (optional)"
 check "httpie" "http" "brew install httpie (optional)"
+check "Browser Agent" "agent-browser" "npm install -g @anthropic/agent-browser (optional)"
 
 echo ""
 echo -e "${CYAN}=== Multi-Agent Tools ===${NC}"
