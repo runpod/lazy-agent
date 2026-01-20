@@ -52,20 +52,6 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-gsd` | Installing meta-prompting system |
 | `/fork` | Spawn multiple parallel Claude instances |
 | `/code-simplifier` | Simplify and refine code for clarity and maintainability |
-| `/frontend-design` | Create distinctive, production-grade frontend interfaces (plugin) |
-
-### Installing Official Plugins
-
-Some skills come from the official Claude plugins marketplace. Install them globally with:
-
-```bash
-claude plugin install <plugin-name>@claude-plugins-official
-```
-
-Example:
-```bash
-claude plugin install frontend-design@claude-plugins-official
-```
 
 ## Configuration
 
