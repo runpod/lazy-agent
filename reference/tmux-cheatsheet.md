@@ -1,13 +1,17 @@
 # tmux Cheatsheet
 
-Based on config at `~/Developer/.dotfiles/.tmux.conf`
+Based on config from `dotfiles/.tmux.conf`
+
+> **Core concept:** Sessions are persistent workspaces that run independently of your terminal.
+> Create sessions for each project or agent task, switch between them instantly with `Prefix + s`.
+> See `steps/04-tmux.md` for the full philosophy on why sessions matter for AI-assisted development.
 
 ## Prefix Key
 
 All commands below start with **Prefix** unless noted:
 
 ```
-Prefix = Ctrl + b
+Prefix = Ctrl + A  (our dotfiles rebind from default Ctrl+B)
 ```
 
 ## Session Management
@@ -117,4 +121,56 @@ Prefix + d
 
 # Later, return
 tmux attach -t myproject
+```
+
+## Session-First Workflow (AI Development)
+
+The key to multi-agent workflows: **one session per task**.
+
+### Morning Startup
+
+```bash
+# Check what sessions are running
+tmux ls
+
+# Attach to where you left off, or create new
+tmux attach -t project || tmux new -s project
+```
+
+### Running Multiple Agents
+
+```bash
+# Session 1: Backend agent
+tmux new -s backend
+claude  # Agent starts working
+Ctrl+A d  # Detach (agent keeps running!)
+
+# Session 2: Frontend agent
+tmux new -s frontend
+claude  # Different agent
+Ctrl+A d  # Detach
+
+# Switch between them instantly
+Ctrl+A s  # Fuzzy search sessions
+```
+
+### The Handoff
+
+When an agent gets stuck or you need fresh context:
+
+```bash
+# Don't kill the session - detach and reference later
+Ctrl+A d
+tmux new -s project-v2  # Fresh start
+# Old session still there if you need to check what was tried
+```
+
+### End of Day
+
+```bash
+# Just detach - everything persists
+Ctrl+A d
+
+# Tomorrow: pick up exactly where you left off
+tmux attach -t project
 ```
