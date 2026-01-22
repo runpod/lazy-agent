@@ -1,3 +1,11 @@
+---
+title: First Project
+time_estimate: 10 min
+required: true
+dependencies:
+  - 05-claude-code
+---
+
 # Step 6: Putting It All Together
 
 ## The Goal

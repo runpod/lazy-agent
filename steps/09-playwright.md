@@ -1,3 +1,12 @@
+---
+title: Playwright - Browser Automation
+time_estimate: 5 min
+required: false
+recommended: true
+dependencies:
+  - 05-claude-code
+---
+
 # Step 9: Playwright - Browser Automation
 
 ## What is Playwright?

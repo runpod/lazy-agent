@@ -1,3 +1,11 @@
+---
+title: Claude Code
+time_estimate: 5 min
+required: true
+dependencies:
+  - 01-prerequisites
+---
+
 # Step 5: Claude Code
 
 ## What is Claude Code?

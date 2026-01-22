@@ -1,3 +1,12 @@
+---
+title: Linear, Beads, and MCP Tools
+time_estimate: 5 min
+required: false
+recommended: true
+dependencies:
+  - 05-claude-code
+---
+
 # Step 8: Linear, Beads, and MCP Tools
 
 ## Overview
