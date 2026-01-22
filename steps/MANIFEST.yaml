@@ -1,0 +1,137 @@
+# Steps Manifest
+# Source of truth for onboarding steps
+# Any agent adding steps MUST update this file
+
+version: 1
+
+# Step statuses:
+# - required: User must complete this step
+# - optional: Ask user before starting (can skip entirely)
+# - recommended: Encouraged but skippable without asking
+
+steps:
+  - id: "01"
+    file: 01-prerequisites.md
+    title: Prerequisites
+    required: true
+    time_estimate: "5 min"
+    description: "Homebrew and Git installation"
+
+  - id: "02"
+    file: 02-ghostty.md
+    title: Ghostty Terminal
+    required: true
+    time_estimate: "3 min"
+    description: "GPU-accelerated terminal emulator"
+    status: missing  # File does not exist yet - use /setup-ghostty skill instead
+
+  - id: "03"
+    file: 03-zsh-and-p10k.md
+    title: Shell Setup
+    required: true
+    time_estimate: "5 min"
+    description: "Zsh, Oh My Zsh, and Powerlevel10k prompt"
+    status: missing  # File does not exist yet - use /setup-shell skill instead
+
+  - id: "04"
+    file: 04-tmux.md
+    title: tmux - The Session Revolution
+    required: true
+    time_estimate: "10 min"
+    description: "Terminal multiplexer for multi-agent workflows"
+    dependencies:
+      - "01"
+
+  - id: "05"
+    file: 05-claude-code.md
+    title: Claude Code
+    required: true
+    time_estimate: "5 min"
+    description: "AI coding assistant installation and basics"
+    dependencies:
+      - "01"
+
+  - id: "06"
+    file: 06-first-project.md
+    title: First Project
+    required: true
+    time_estimate: "10 min"
+    description: "Hands-on practice with Claude Code"
+    dependencies:
+      - "05"
+
+  - id: "07"
+    file: 07-gastown.md
+    title: Gastown Multi-Agent
+    required: false
+    optional: true
+    time_estimate: "15 min"
+    description: "Multi-agent workspace orchestration (experimental)"
+    dependencies:
+      - "04"
+      - "05"
+    note: "Experimental - requires explicit user consent"
+
+  - id: "08"
+    file: 08-linear-and-mcp.md
+    title: Linear and MCP
+    required: false
+    recommended: true
+    time_estimate: "5 min"
+    description: "Linear integration, Beads sync, MCP servers"
+    dependencies:
+      - "05"
+
+  - id: "09"
+    file: 09-playwright.md
+    title: Playwright Browser Automation
+    required: false
+    recommended: true
+    time_estimate: "5 min"
+    description: "Browser automation for Claude Code"
+    dependencies:
+      - "05"
+
+  - id: "10"
+    file: 10-gcalcli.md
+    title: Google Calendar CLI
+    required: false
+    optional: true
+    time_estimate: "10 min"
+    description: "Google Calendar in your terminal"
+    status: missing  # File does not exist yet - use /setup-gcalcli skill instead
+    note: "Requires Google Cloud Console OAuth setup"
+
+  - id: "11"
+    file: 11-terminal-power-tools.md
+    title: Terminal Power Tools
+    required: false
+    recommended: true
+    time_estimate: "1 min"
+    description: "fzf, bat, eza, jq, httpie"
+    tags:
+      - quick
+
+  - id: "12"
+    file: 12-notion-mcp.md
+    title: Notion MCP
+    required: false
+    recommended: true
+    time_estimate: "2 min"
+    description: "Notion integration via MCP"
+    status: missing  # File does not exist yet - use /setup-notion skill instead
+
+  - id: "13"
+    file: 13-karabiner.md
+    title: Karabiner Keyboard
+    required: false
+    recommended: true
+    time_estimate: "3 min"
+    description: "Caps Lock as Escape/Ctrl"
+    status: missing  # File does not exist yet - use /setup-karabiner skill instead
+
+# Notes:
+# - Steps marked "status: missing" should use the corresponding skill instead
+# - Missing step files can be created by extracting content from skills
+# - Keep step numbers sequential where possible
+# - Gaps in numbering are OK (allows inserting steps later)

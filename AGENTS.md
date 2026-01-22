@@ -146,25 +146,17 @@ For **EACH** tool, follow this pattern:
 
 ### Step Files
 
-Read these in order (skip completed steps and steps that don't apply to the user's OS):
+**Read step metadata from `steps/MANIFEST.yaml`** - this is the source of truth for:
+- Step ordering and dependencies
+- Which steps are required vs optional vs recommended
+- Time estimates
+- Notes and warnings
 
-1. `steps/01-prerequisites.md` - Package manager, Git, gh CLI **[CROSS-PLATFORM]**
-2. `steps/02-ghostty.md` - Terminal emulator setup **[CROSS-PLATFORM]**
-3. `steps/03-zsh-and-p10k.md` - Shell and prompt **[CROSS-PLATFORM]**
-4. `steps/04-tmux.md` - Terminal multiplexer **[CROSS-PLATFORM]**
-5. `steps/05-claude-code.md` - Installing and configuring Claude Code **[CROSS-PLATFORM]**
-6. `steps/06-first-project.md` - Hands-on practice **[CROSS-PLATFORM]**
-7. `steps/07-gastown.md` - Multi-agent workspaces **[CROSS-PLATFORM]**
-8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP **[CROSS-PLATFORM]**
-9. `steps/09-playwright.md` - Browser automation with Playwright **[CROSS-PLATFORM]**
-10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL] [CROSS-PLATFORM]**
-11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK] [CROSS-PLATFORM]**
-12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED] [CROSS-PLATFORM]**
-13. `steps/13-karabiner.md` - Keyboard customization **[macOS-ONLY]** - Skip entirely on Linux!
-14. `steps/14-lsp.md` - Language Server Protocol setup for Claude Code & Neovim **[RECOMMENDED] [CROSS-PLATFORM]**
-15. `steps/15-hooks.md` - Deterministic enforcement with hooks (block secrets, auto-format) **[RECOMMENDED] [CROSS-PLATFORM]**
-16. `steps/16-skills.md` - Commands & skills system for reusable expertise **[RECOMMENDED] [CROSS-PLATFORM]**
-17. `steps/17-best-practices.md` - Chat hygiene, /clear, single-purpose conversations **[QUICK] [CROSS-PLATFORM]**
+```bash
+cat steps/MANIFEST.yaml
+```
+
+Use the manifest ordering, and **skip steps that don't apply to the user's OS**.
 
 ### CRITICAL: Run Commands Yourself
 
@@ -198,18 +190,31 @@ Use the correct package manager based on detected OS:
 - Always use **lowercase** for OS/arch in URLs: `linux_amd64`, `linux_arm64` (NOT `Linux_arm64`)
 - Check the actual release URL before running wget/curl
 
-### Handling Optional vs Quick Steps
+Key metadata fields:
+- `required: true` - User must complete this step
+- `optional: true` - Always ask user before starting (can skip entirely)
+- `recommended: true` - Encouraged but skippable without asking
+- `status: missing` - File doesn't exist yet, use the corresponding skill instead
 
-**For OPTIONAL steps (like gcalcli):**
+### Handling Step Types
+
+**For REQUIRED steps:**
+- Proceed through these in order
+- Skip if already completed (check verification commands)
+
+**For OPTIONAL steps (marked `optional: true`):**
 - Always ask the user first before starting the step
 - Say something like: "Would you like to set up [tool]? This is optional and takes ~X minutes. You can always do this later by asking me to 'set up [tool]'."
 - If they decline, skip entirely and move on
-- The user can request optional setups anytime by saying "set up gcalcli later" or similar
+- The user can request optional setups anytime
 
-**For QUICK steps (like terminal power tools):**
-- These are recommended for everyone
-- They install fast (~30 seconds) and provide immediate value
+**For RECOMMENDED steps (marked `recommended: true`):**
+- Encouraged for everyone
 - Still mention what you're about to do, but proceed unless they object
+
+**For QUICK steps (marked with `quick` tag or `time_estimate: "< 1 min"`):**
+- Fast to complete, provide immediate value
+- Proceed unless user objects
 
 ### Handling macOS-Only Steps
 

@@ -7,9 +7,20 @@ description: Guides new team members through complete dev environment setup. Use
 
 You are a friendly, patient guide helping a developer set up their terminal environment. Your goal is to take them from zero to a beautiful, productive terminal setup.
 
+## Manifests (Source of Truth)
+
+**Read these manifests to understand the setup flow:**
+
+```bash
+cat steps/MANIFEST.yaml   # Step ordering, dependencies, metadata
+cat skills/MANIFEST.yaml  # Available skills and categories
+```
+
+Steps and skills are defined declaratively in these manifests. When adding new content, update the relevant manifest.
+
 ## Available Skills
 
-You have access to these skills for interactive setup. **Use them** when you reach that step:
+Skills are defined in `skills/MANIFEST.yaml`. Use them for interactive setup:
 
 | Skill | When to use |
 |-------|-------------|
@@ -55,6 +66,22 @@ Once gh works, tell the user:
 This creates a feedback loop where issues get fixed via PRs as they're discovered.
 
 ## Setup Flow
+
+### Phase 0: Read Manifests
+
+First, understand the setup structure:
+
+```bash
+cat steps/MANIFEST.yaml
+```
+
+This tells you:
+- Which steps exist and in what order
+- Which are required vs optional vs recommended
+- Dependencies between steps
+- Time estimates
+
+Steps marked `status: missing` don't have files yet - use the corresponding skill instead.
 
 ### Phase 1: Discovery
 

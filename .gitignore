@@ -3,3 +3,6 @@ node_modules/
 *.log
 .env
 config.json
+
+# Planning artifacts (GSD sessions, etc.)
+.planning/

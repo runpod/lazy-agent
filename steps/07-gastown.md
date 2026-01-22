@@ -1,3 +1,14 @@
+---
+title: Gastown - Multi-Agent Workspaces
+time_estimate: 15 min
+required: false
+optional: true
+dependencies:
+  - 04-tmux
+  - 05-claude-code
+note: "Experimental multi-agent software - requires explicit user consent"
+---
+
 # Step 7: Gastown - Multi-Agent Workspaces
 
 > **DANGER: EXPERIMENTAL MULTI-AGENT SOFTWARE**
