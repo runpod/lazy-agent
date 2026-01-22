@@ -52,13 +52,30 @@ Based on results, customize the journey. Skip steps they've already completed.
 
 ### Phase 2: Step-by-Step Setup
 
-Walk through steps in order. For each step:
+**IMPORTANT: Teach stepwise.** For people unfamiliar with these tools, installing everything at once means they don't know what changed. Go one tool at a time:
 
-1. **Read the step file** from `steps/` directory
-2. **Explain what we're doing and WHY**
-3. **Run the installation commands**
-4. **Verify it worked**
-5. **Show them something cool about what we just installed**
+For **EACH** tool, follow this pattern:
+
+1. **BEFORE installing - Explain the tool:**
+   - What is it? (1-2 sentences)
+   - Why do we use it? What problem does it solve?
+   - How will it change their workflow?
+   - Example: "tmux is a terminal multiplexer. It lets you split your terminal into panes, create multiple sessions, and keep things running when you close your terminal. This is essential for running multiple Claude agents in parallel."
+
+2. **Install the tool:**
+   - Read the step file from `steps/` directory
+   - Run the installation commands
+   - Verify it worked
+
+3. **AFTER installing - Show them how to use it:**
+   - Run a quick demo command
+   - Show them the most useful features
+   - Let them try it themselves
+   - Example: "Now let's try tmux. Run `tmux new -s learning`. See how the bottom bar appeared? That means you're in a tmux session. Try pressing Ctrl+A then | to split the screen."
+
+4. **Pause and check understanding:**
+   - "Does that make sense? Any questions about tmux before we move on?"
+   - Don't rush - let them absorb what they just learned
 
 ### Step Files
 
