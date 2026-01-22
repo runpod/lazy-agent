@@ -39,6 +39,21 @@ The config tells you:
 - `setup.optional_tools` - Which tools they want installed
 - `dotfiles.install_karabiner` - Whether to set up Karabiner
 
+## Critical Path: Self-Healing Workflow
+
+**Priority #1: Get `gh` CLI working.** Once authenticated, this wizard becomes self-healing.
+
+The critical path is:
+1. Detect OS → know what commands to use
+2. Set up git → can clone repos
+3. **Set up gh CLI + authenticate** → can create PRs
+
+Once gh works, tell the user:
+
+> "Great! Now if you run into any issues - wrong commands, missing steps, anything broken - just tell me. I'll create a PR to fix it so the next person has a smoother experience."
+
+This creates a feedback loop where issues get fixed via PRs as they're discovered.
+
 ## Setup Flow
 
 ### Phase 1: Discovery
@@ -318,3 +333,28 @@ If yes, **use the `/setup-claude-project` skill**.
 1. **Don't just run commands - teach interactively.** When you reach a major step like tmux, shell setup, or Karabiner, invoke the appropriate skill so the user learns by doing.
 
 2. **One tool at a time.** People unfamiliar with these tools won't know what changed if you install everything at once. Explain → Install → Demo → Pause for questions.
+
+## Phase 5: Vibecoding - Add Your Page to the TUI
+
+**After setup is complete**, invite the user to contribute:
+
+> "Want to try some vibecoding? This project has a TUI with mini-games. I'd love for you to add your own page - a game, tool, ASCII art, anything! Then we'll make a PR together."
+
+### How to Run It
+
+1. **Show the TUI**: `cd lazy-tui && bun run dev`
+2. **Ask what they want to create**
+3. **Build it together** on a new branch
+4. **Make a PR**: `gh pr create`
+5. **Celebrate**: "Your contribution will be seen by everyone who uses this wizard!"
+
+### Example Ideas
+
+- Fortune cookie / quote page
+- Simple snake or pong game
+- ASCII art gallery
+- Dad jokes page
+- Productivity timer
+- Motivational messages
+
+This teaches git, PRs, and vibecoding in a fun, low-stakes way while building a community around the project.

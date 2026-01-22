@@ -29,6 +29,26 @@ Personalize your responses using this config. For example:
 - **Practical**: Focus on what they'll actually use day-to-day.
 - **Curious**: Ask about their preferences (dark mode? which editor?).
 
+## Critical Path: Self-Healing Workflow
+
+**The most important early milestone is getting `gh` CLI set up and authenticated.** Once the user has gh working, this wizard becomes self-healing:
+
+1. **Detect OS** → know what commands to use
+2. **Set up git** → can clone repos
+3. **Set up gh CLI + authenticate** → can create PRs
+
+Once gh is working, tell the user:
+
+> "Great! Now if you run into any issues with this wizard - wrong commands, missing steps, anything that doesn't work - just tell me what happened. I'll create a PR to fix it so the next person doesn't hit the same problem."
+
+This creates a feedback loop where:
+- Users report issues naturally during setup
+- Claude creates PRs to fix them
+- The wizard improves over time
+- Future users have a smoother experience
+
+**Prioritize getting to this point quickly.** The rest of the setup is less critical because issues can be fixed via PRs.
+
 ## How to Guide Users
 
 When a user says "help me get started" or similar, follow this flow:
@@ -438,3 +458,56 @@ This is great for users who want to:
 - Create custom skills for their workflows
 - Learn the Agent Skills specification
 - See real-time narration of skill usage
+
+## Vibecoding: Add Your Page to the TUI
+
+**This is the fun part!** After setup is complete, invite the user to contribute to the project:
+
+> "Now that you're all set up, want to try some vibecoding? This project has a TUI (terminal user interface) with mini-games and tools. I'd love for you to add your own page to it - whatever you can dream of! A game, a tool, ASCII art, anything. Then we'll make a PR together so your contribution becomes part of the project for future users."
+
+### How to Guide Vibecoding
+
+1. **Show them the existing TUI:**
+   ```bash
+   cd lazy-tui && bun run dev
+   ```
+
+2. **Explore what's already there:**
+   - Games (Pirate, Wizard)
+   - Tools page
+   - Setup page
+
+3. **Ask what they want to create:**
+   - "What kind of page would you like to add?"
+   - "Could be a game, a tool, ASCII art, a joke page, anything!"
+
+4. **Create it together:**
+   - Create a new branch: `git checkout -b feat/add-[their-idea]`
+   - Build the page collaboratively
+   - Test it in the TUI
+
+5. **Make the PR:**
+   - `git add . && git commit -m "feat: add [their-idea] page to TUI"`
+   - `git push -u origin feat/add-[their-idea]`
+   - `gh pr create --title "feat: add [their-idea] to TUI" --body "Added by a new user during onboarding!"`
+
+6. **Celebrate:**
+   - "You just made your first contribution! When this gets merged, everyone who goes through this wizard will see your creation."
+
+### Why This Matters
+
+- **Learning by doing**: Users learn git, PRs, and vibecoding in a low-stakes, fun way
+- **Community building**: The TUI becomes a collection of user contributions
+- **Self-improving wizard**: Users are invested in the project's success
+- **Portfolio piece**: Users can point to their merged PR
+
+### Example Ideas to Suggest
+
+If they're stuck, suggest:
+- A fortune cookie / random quote page
+- A simple snake or pong game
+- An ASCII art gallery
+- A "dad jokes" page
+- A productivity timer
+- A motivational message generator
+- Their own spin on an existing game
