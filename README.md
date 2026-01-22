@@ -30,6 +30,27 @@ Like LazyVim, but for terminal-based AI agent workflows. Get a beautiful, produc
 
 Claude will read your config and guide you through a personalized setup.
 
+## Interactive TUI
+
+There's also a visual TUI (Terminal User Interface) with progress tracking and mini-games:
+
+```bash
+./tui.sh
+```
+
+Or manually:
+```bash
+cd lazy-tui && bun install && bun start
+```
+
+The TUI includes:
+- **Setup progress tracker** - Visual checklist of all setup steps
+- **Mini-games** - Practice vim keys while having fun
+  - Spell Caster (typing + vim navigation)
+  - Pirate Survival (Vampire Survivors style)
+  - Flappy Terminal
+- **Help pages** - Quick reference for keybindings
+
 ## What You'll Set Up
 
 ### Core (Everyone)
@@ -81,6 +102,7 @@ There's also a printable cheatsheet at `reference/tmux-cheatsheet.html`.
 ```
 lazy-agent/
 ├── setup.sh            # Interactive setup wizard
+├── tui.sh              # Launch the interactive TUI
 ├── doctor.sh           # Check what's installed
 ├── update.sh           # Pull updates and refresh configs
 ├── CLAUDE.md           # Instructions for Claude (the wizard brain)
@@ -93,11 +115,21 @@ lazy-agent/
 │   └── install.sh
 ├── steps/              # Step-by-step setup guides
 │   ├── 01-prerequisites.md
-│   ├── 02-ghostty.md
-│   ├── 03-zsh-and-p10k.md
 │   ├── 04-tmux.md
 │   ├── 05-claude-code.md
+│   ├── 14-lsp.md
+│   ├── 15-hooks.md
+│   ├── 16-skills.md
+│   ├── 17-best-practices.md
 │   └── ...more
+├── lazy-tui/           # Interactive TUI application
+│   ├── src/
+│   │   ├── index.tsx           # Main entry point
+│   │   └── components/
+│   │       ├── SetupPage.tsx   # Setup progress tracker
+│   │       ├── GamesPage.tsx   # Mini-games menu
+│   │       └── games/          # Vim practice games
+│   └── package.json
 ├── reference/          # Cheatsheets and quick reference
 │   ├── tmux-cheatsheet.html
 │   └── tmux-cheatsheet.md
