@@ -35,20 +35,54 @@ When a user says "help me get started" or similar, follow this flow:
 
 ### Phase 1: Discovery
 
-First, understand what they already have:
+**CRITICAL: First detect the operating system.** This determines which steps apply and which package manager to use.
 
 ```bash
-# Check what's installed
-which brew && echo "Homebrew: installed" || echo "Homebrew: not installed"
+# Detect OS and architecture
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+echo "Operating System: $OS"
+echo "Architecture: $ARCH"
+
+# Detect package manager
+if command -v brew &>/dev/null; then
+    PKG_MGR="brew"
+elif command -v apt &>/dev/null; then
+    PKG_MGR="apt"
+elif command -v dnf &>/dev/null; then
+    PKG_MGR="dnf"
+elif command -v pacman &>/dev/null; then
+    PKG_MGR="pacman"
+else
+    PKG_MGR="unknown"
+fi
+echo "Package manager: $PKG_MGR"
+```
+
+**Store these results** and use them throughout the setup:
+- **macOS**: Use `brew`, offer Karabiner, check `/Applications/` for GUI apps
+- **Linux**: Use apt/dnf/pacman, skip Karabiner, use `which` for CLI tools only
+
+Then check what tools are installed:
+
+```bash
+# Cross-platform checks (work on any OS)
 which git && echo "Git: installed" || echo "Git: not installed"
 which zsh && echo "Zsh: installed" || echo "Zsh: not installed"
 which tmux && echo "Tmux: installed" || echo "Tmux: not installed"
 which nvim && echo "Neovim: installed" || echo "Neovim: not installed"
-ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: installed" || echo "Ghostty: not installed"
-ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
+which claude && echo "Claude Code: installed" || echo "Claude Code: not installed"
+which gh && echo "GitHub CLI: installed" || echo "GitHub CLI: not installed"
+which ghostty && echo "Ghostty: installed" || echo "Ghostty: not installed"
+
+# macOS-only checks (SKIP on Linux)
+if [ "$(uname -s)" = "Darwin" ]; then
+    which brew && echo "Homebrew: installed" || echo "Homebrew: not installed"
+    ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
+fi
 ```
 
-Based on results, customize the journey. Skip steps they've already completed.
+Based on results, customize the journey. **Skip steps that don't apply to the user's OS.**
 
 ### Phase 2: Step-by-Step Setup
 
@@ -62,21 +96,53 @@ Walk through steps in order. For each step:
 
 ### Step Files
 
-Read these in order (skip completed steps):
+Read these in order (skip completed steps and steps that don't apply to the user's OS):
 
-1. `steps/01-prerequisites.md` - Homebrew, Git basics
-2. `steps/02-ghostty.md` - Terminal emulator setup
-3. `steps/03-zsh-and-p10k.md` - Shell and prompt
-4. `steps/04-tmux.md` - Terminal multiplexer
-5. `steps/05-claude-code.md` - Installing and configuring Claude Code
-6. `steps/06-first-project.md` - Hands-on practice
-7. `steps/07-gastown.md` - Multi-agent workspaces
-8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP
-9. `steps/09-playwright.md` - Browser automation with Playwright
-10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL]**
-11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK]**
-12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED]**
-13. `steps/13-karabiner.md` - Keyboard customization (Caps Lock → Escape + tmux prefix) **[RECOMMENDED]**
+1. `steps/01-prerequisites.md` - Package manager, Git, gh CLI **[CROSS-PLATFORM]**
+2. `steps/02-ghostty.md` - Terminal emulator setup **[CROSS-PLATFORM]**
+3. `steps/03-zsh-and-p10k.md` - Shell and prompt **[CROSS-PLATFORM]**
+4. `steps/04-tmux.md` - Terminal multiplexer **[CROSS-PLATFORM]**
+5. `steps/05-claude-code.md` - Installing and configuring Claude Code **[CROSS-PLATFORM]**
+6. `steps/06-first-project.md` - Hands-on practice **[CROSS-PLATFORM]**
+7. `steps/07-gastown.md` - Multi-agent workspaces **[CROSS-PLATFORM]**
+8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP **[CROSS-PLATFORM]**
+9. `steps/09-playwright.md` - Browser automation with Playwright **[CROSS-PLATFORM]**
+10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL] [CROSS-PLATFORM]**
+11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK] [CROSS-PLATFORM]**
+12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED] [CROSS-PLATFORM]**
+13. `steps/13-karabiner.md` - Keyboard customization **[macOS-ONLY]** - Skip entirely on Linux!
+
+### CRITICAL: Run Commands Yourself
+
+**DO NOT** ask users to run commands outside of Claude Code. This wastes their time and burns tokens checking status.
+
+**DO:**
+- Run installation commands directly using the Bash tool
+- Verify the result immediately after running
+- Move on to the next step
+
+**DON'T:**
+- Say "please run this command in your terminal"
+- Ask "have you finished running the command?"
+- Wait for confirmation that they ran something
+
+### OS-Aware Package Installation
+
+Use the correct package manager based on detected OS:
+
+| Tool | macOS (brew) | Ubuntu/Debian (apt) | Fedora (dnf) | Arch (pacman) |
+|------|--------------|---------------------|--------------|---------------|
+| tmux | `brew install tmux` | `sudo apt install tmux` | `sudo dnf install tmux` | `sudo pacman -S tmux` |
+| git | `brew install git` | `sudo apt install git` | `sudo dnf install git` | `sudo pacman -S git` |
+| zsh | `brew install zsh` | `sudo apt install zsh` | `sudo dnf install zsh` | `sudo pacman -S zsh` |
+| fzf | `brew install fzf` | `sudo apt install fzf` | `sudo dnf install fzf` | `sudo pacman -S fzf` |
+| bat | `brew install bat` | `sudo apt install bat` | `sudo dnf install bat` | `sudo pacman -S bat` |
+| jq | `brew install jq` | `sudo apt install jq` | `sudo dnf install jq` | `sudo pacman -S jq` |
+| gh | `brew install gh` | See [gh Linux install](https://github.com/cli/cli/blob/trunk/docs/install_linux.md) | `sudo dnf install gh` | `sudo pacman -S github-cli` |
+
+**For tools not in package managers** (like lazygit on some distros), download from GitHub releases:
+- Always use **lowercase** for OS/arch in URLs: `linux_amd64`, `linux_arm64` (NOT `Linux_arm64`)
+- Check the actual release URL before running wget/curl
 
 ### Handling Optional vs Quick Steps
 
@@ -91,6 +157,12 @@ Read these in order (skip completed steps):
 - They install fast (~30 seconds) and provide immediate value
 - Still mention what you're about to do, but proceed unless they object
 
+### Handling macOS-Only Steps
+
+**Karabiner-Elements is macOS-only.** On Linux:
+- Skip step 13 entirely - don't even mention it
+- Linux users can use `xcape` or `keyd` for similar Caps Lock remapping, but this is out of scope for this wizard
+
 ### Phase 3: Interactive Learning
 
 After setup is complete:
@@ -101,23 +173,22 @@ After setup is complete:
 
 ## Verification Commands
 
-After each major step, verify it worked:
+After each major step, verify it worked. **Use cross-platform checks:**
 
 ```bash
-# Ghostty
-ls /Applications/Ghostty.app
+# Cross-platform verifications (work on any OS)
+which git && git --version
+which zsh && zsh --version
+which tmux && tmux -V
+which claude && echo "Claude Code: installed"
+which gh && gh --version
+which ghostty && ghostty --version
 
 # Oh My Zsh
 ls ~/.oh-my-zsh
 
 # Powerlevel10k
 ls ~/.oh-my-zsh/custom/themes/powerlevel10k 2>/dev/null || ls ~/.powerlevel10k 2>/dev/null
-
-# Tmux
-tmux -V
-
-# Claude Code
-which claude
 
 # gcalcli
 which gcalcli
@@ -129,8 +200,11 @@ eza --version
 jq --version
 http --version
 
-# Karabiner-Elements
-ls /Applications/Karabiner-Elements.app
+# macOS-ONLY verifications (skip on Linux!)
+if [ "$(uname -s)" = "Darwin" ]; then
+    ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty.app: installed"
+    ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed"
+fi
 ```
 
 ## Handling Problems
