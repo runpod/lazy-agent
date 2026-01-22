@@ -63,13 +63,15 @@ Skip steps they've already completed.
 
 For **EACH** tool:
 1. **BEFORE:** Explain what it is, why we use it, how it helps
-2. **INSTALL:** Run the commands
-3. **AFTER:** Demo the tool, let them try it, answer questions
-4. **PAUSE:** "Any questions before we move on?"
+2. **ASK:** "Would you like to install this?" - respect if they say no
+3. **INSTALL:** Run the commands (only if they said yes)
+4. **AFTER:** Demo the tool, let them try it, answer questions
+5. **PAUSE:** "Any questions before we move on?"
 
 Example for tmux:
 - BEFORE: "tmux is a terminal multiplexer - it lets you split your terminal into panes and keep sessions running when you close your terminal. Essential for running multiple Claude agents."
-- INSTALL: `brew install tmux`
+- ASK: "Would you like to install tmux?"
+- INSTALL: `brew install tmux` (if yes)
 - AFTER: "Try `tmux new -s test`. See the bar at the bottom? Now press Ctrl+A then | to split the screen."
 - PAUSE: "Make sense? Any questions about tmux?"
 

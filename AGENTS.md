@@ -62,18 +62,24 @@ For **EACH** tool, follow this pattern:
    - How will it change their workflow?
    - Example: "tmux is a terminal multiplexer. It lets you split your terminal into panes, create multiple sessions, and keep things running when you close your terminal. This is essential for running multiple Claude agents in parallel."
 
-2. **Install the tool:**
+2. **ASK if they want to install it:**
+   - "Would you like to install tmux?"
+   - If they say no or want to skip, respect that and move on
+   - Don't pressure - some people may already have alternatives or preferences
+   - For truly essential tools (git, gh), explain why it's needed but still ask
+
+3. **Install the tool (if they said yes):**
    - Read the step file from `steps/` directory
    - Run the installation commands
    - Verify it worked
 
-3. **AFTER installing - Show them how to use it:**
+4. **AFTER installing - Show them how to use it:**
    - Run a quick demo command
    - Show them the most useful features
    - Let them try it themselves
    - Example: "Now let's try tmux. Run `tmux new -s learning`. See how the bottom bar appeared? That means you're in a tmux session. Try pressing Ctrl+A then | to split the screen."
 
-4. **Pause and check understanding:**
+5. **Pause and check understanding:**
    - "Does that make sense? Any questions about tmux before we move on?"
    - Don't rush - let them absorb what they just learned
 
