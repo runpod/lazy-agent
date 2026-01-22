@@ -44,6 +44,15 @@ const HEAL_SPELLS: Spell[] = [
 const LANE_COUNT = 3;
 const ATTACK_LANE_WIDTH = 40;
 
+// Element system
+type Element = "fire" | "ice" | "lightning";
+const ELEMENTS: Element[] = ["fire", "ice", "lightning"];
+const ELEMENT_INFO = {
+  fire: { icon: "🔥", color: "#f44336", name: "Fire" },
+  ice: { icon: "❄️", color: "#4fc3f7", name: "Ice" },
+  lightning: { icon: "⚡", color: "#ffc107", name: "Lightning" },
+};
+
 interface Attack {
   id: number;
   x: number;
@@ -56,7 +65,9 @@ interface WizardGameProps {
 }
 
 export function WizardGame({ goBack }: WizardGameProps) {
-  const [gameState, setGameState] = useState<"ready" | "playing" | "gameover">("ready");
+  const [gameState, setGameState] = useState<"ready" | "playing" | "gameover">(
+    "ready",
+  );
   const [currentSpell, setCurrentSpell] = useState<Spell>(EASY_SPELLS[0]);
   const [typed, setTyped] = useState("");
   const [score, setScore] = useState(0);
@@ -73,6 +84,18 @@ export function WizardGame({ goBack }: WizardGameProps) {
   const [monsterHit, setMonsterHit] = useState(false);
   const [spellReady, setSpellReady] = useState(false);
   const [healAnimation, setHealAnimation] = useState(false);
+  const [bookOpen, setBookOpen] = useState(false);
+
+  // Element system state
+  const [playerElement, setPlayerElement] = useState<Element>("fire");
+  const [monsterWeakness, setMonsterWeakness] = useState<Element>("fire");
+
+  // Vim mechanics
+  const [numberPrefix, setNumberPrefix] = useState<number | null>(null);
+  const [lastSpell, setLastSpell] = useState<Spell | null>(null);
+  const [lastSpellElement, setLastSpellElement] = useState<Element | null>(
+    null,
+  );
 
   const attackIdRef = useRef(0);
 
@@ -118,56 +141,90 @@ export function WizardGame({ goBack }: WizardGameProps) {
     setAttacks([]);
     setCastAnimation(null);
     setSpellReady(false);
+    setBookOpen(false);
+    // Element system
+    setPlayerElement("fire");
+    setMonsterWeakness(ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)]);
     nextSpell();
   }, [nextSpell]);
 
-  const castSpell = useCallback(() => {
-    if (!spellReady) return;
+  const castSpell = useCallback(
+    (isDotRepeat = false) => {
+      if (!spellReady && !isDotRepeat) return;
 
-    // Heal spell - always works
-    if (currentSpell.heal) {
-      setHealAnimation(true);
-      setTimeout(() => setHealAnimation(false), 500);
-      setPlayerHealth((h) => Math.min(100, h + currentSpell.heal!));
-      setScore((s) => s + 5);
-      nextSpell();
-      return;
-    }
-
-    // Attack spell - must be in same lane as monster!
-    setCastAnimation(currentSpell.name);
-    setTimeout(() => setCastAnimation(null), 600);
-
-    if (playerLane !== monsterLane) {
-      // Missed! Wrong lane
-      nextSpell();
-      return;
-    }
-
-    // Hit!
-    setMonsterHit(true);
-    setTimeout(() => setMonsterHit(false), 300);
-
-    setMonsterHealth((h) => {
-      const newHealth = h - currentSpell.damage;
-      if (newHealth <= 0) {
-        setScore((s) => s + 100);
-        setTimeout(() => {
-          setMonsterHealth(100 + Math.floor(score / 50) * 20);
-          setMonsterLane(Math.floor(Math.random() * LANE_COUNT)); // New monster, random lane
-          nextSpell();
-        }, 600);
-        return 0;
+      // Save for dot command
+      if (!isDotRepeat && !currentSpell.heal) {
+        setLastSpell(currentSpell);
+        setLastSpellElement(playerElement);
       }
-      setScore((s) => s + 10);
-      nextSpell();
-      return newHealth;
-    });
-  }, [spellReady, currentSpell, nextSpell, score, playerLane, monsterLane]);
+
+      // Check element match for 2x damage
+      const isElementMatch = playerElement === monsterWeakness;
+
+      // Heal spell - always works
+      if (currentSpell.heal) {
+        setHealAnimation(true);
+        setTimeout(() => setHealAnimation(false), 500);
+        setPlayerHealth((h) => Math.min(100, h + currentSpell.heal!));
+        setScore((s) => s + 5);
+        nextSpell();
+        return;
+      }
+
+      // Attack spell - must be in same lane as monster!
+      setCastAnimation(currentSpell.name);
+      setTimeout(() => setCastAnimation(null), 600);
+
+      if (playerLane !== monsterLane) {
+        // Missed! Wrong lane
+        nextSpell();
+        return;
+      }
+
+      // Hit! Apply element bonus
+      let damage = currentSpell.damage;
+      if (isElementMatch) damage = damage * 2;
+
+      setMonsterHit(true);
+      setTimeout(() => setMonsterHit(false), 300);
+
+      setMonsterHealth((h) => {
+        const newHealth = h - damage;
+        if (newHealth <= 0) {
+          const bonus = isElementMatch ? 150 : 100;
+          setScore((s) => s + bonus);
+          setTimeout(() => {
+            setMonsterHealth(100 + Math.floor(score / 50) * 20);
+            setMonsterLane(Math.floor(Math.random() * LANE_COUNT));
+            // New monster gets DIFFERENT weakness
+            setMonsterWeakness((current) => {
+              const others = ELEMENTS.filter((e) => e !== current);
+              return others[Math.floor(Math.random() * others.length)];
+            });
+            nextSpell();
+          }, 600);
+          return 0;
+        }
+        setScore((s) => s + (isElementMatch ? 15 : 10));
+        nextSpell();
+        return newHealth;
+      });
+    },
+    [
+      spellReady,
+      currentSpell,
+      nextSpell,
+      score,
+      playerLane,
+      monsterLane,
+      playerElement,
+      monsterWeakness,
+    ],
+  );
 
   // Check if spell is complete
   useEffect(() => {
-    if (gameState !== "playing") return;
+    if (gameState !== "playing" || bookOpen) return;
     if (typed.toLowerCase() === currentSpell.incantation.toLowerCase()) {
       setSpellReady(true);
     }
@@ -175,7 +232,7 @@ export function WizardGame({ goBack }: WizardGameProps) {
 
   // Monster moves between lanes
   useEffect(() => {
-    if (gameState !== "playing") return;
+    if (gameState !== "playing" || bookOpen) return;
 
     const interval = setInterval(() => {
       // Monster moves to a different lane
@@ -194,7 +251,7 @@ export function WizardGame({ goBack }: WizardGameProps) {
 
   // Spawn attacks from monster's lane
   useEffect(() => {
-    if (gameState !== "playing") return;
+    if (gameState !== "playing" || bookOpen) return;
 
     const interval = setInterval(() => {
       // Spawn attacks from monster's current lane
@@ -219,7 +276,7 @@ export function WizardGame({ goBack }: WizardGameProps) {
 
   // Move attacks and check collisions
   useEffect(() => {
-    if (gameState !== "playing") return;
+    if (gameState !== "playing" || bookOpen) return;
 
     const interval = setInterval(() => {
       setAttacks((currentAttacks) => {
@@ -269,19 +326,72 @@ export function WizardGame({ goBack }: WizardGameProps) {
     }
 
     if (gameState === "playing") {
+      // Toggle spell book with ?
+      if (e.sequence === "?" || (e.shift && e.name === "/")) {
+        setBookOpen((b) => !b);
+        return;
+      }
+
+      // Close book with any key
+      if (bookOpen) {
+        setBookOpen(false);
+        return;
+      }
+
       if (e.name === "escape") {
         setGameState("gameover");
         setHighScore((h) => Math.max(h, score));
         return;
       }
 
-      // Dodge with vim keys
+      // Number prefix (1-9)
+      if (e.name && /^[1-9]$/.test(e.name)) {
+        const digit = parseInt(e.name, 10);
+        setNumberPrefix((prev) =>
+          prev ? Math.min(prev * 10 + digit, 99) : digit,
+        );
+        return;
+      }
+
+      // Dot command - repeat last spell
+      if (e.name === ".") {
+        if (lastSpell && playerLane === monsterLane) {
+          if (lastSpellElement) setPlayerElement(lastSpellElement);
+          castSpell(true);
+        }
+        setNumberPrefix(null);
+        return;
+      }
+
+      // Movement: j/k for lanes (with number prefix)
       if (e.name === "k" || e.name === "up") {
-        setPlayerLane((l) => Math.max(0, l - 1));
+        const count = numberPrefix || 1;
+        setPlayerLane((l) => Math.max(0, l - count));
+        setNumberPrefix(null);
         return;
       }
       if (e.name === "j" || e.name === "down") {
-        setPlayerLane((l) => Math.min(LANE_COUNT - 1, l + 1));
+        const count = numberPrefix || 1;
+        setPlayerLane((l) => Math.min(LANE_COUNT - 1, l + count));
+        setNumberPrefix(null);
+        return;
+      }
+
+      // Element switch: h/l
+      if (e.name === "h" || e.name === "left") {
+        setPlayerElement((current) => {
+          const idx = ELEMENTS.indexOf(current);
+          return ELEMENTS[(idx - 1 + ELEMENTS.length) % ELEMENTS.length];
+        });
+        setNumberPrefix(null);
+        return;
+      }
+      if (e.name === "l" || e.name === "right") {
+        setPlayerElement((current) => {
+          const idx = ELEMENTS.indexOf(current);
+          return ELEMENTS[(idx + 1) % ELEMENTS.length];
+        });
+        setNumberPrefix(null);
         return;
       }
 
@@ -290,6 +400,7 @@ export function WizardGame({ goBack }: WizardGameProps) {
         if (spellReady) {
           castSpell();
         }
+        setNumberPrefix(null);
         return;
       }
 
@@ -300,8 +411,13 @@ export function WizardGame({ goBack }: WizardGameProps) {
         return;
       }
 
-      // Type spell letters (not j/k since those are for dodging)
-      if (e.name && e.name.length === 1 && /[a-zA-Z]/.test(e.name) && e.name !== "j" && e.name !== "k") {
+      // Type spell letters (not h/j/k/l since those are for movement)
+      if (
+        e.name &&
+        e.name.length === 1 &&
+        /[a-zA-Z]/.test(e.name) &&
+        !["h", "j", "k", "l"].includes(e.name)
+      ) {
         if (!spellReady) {
           setTyped((t) => t + e.name);
         }
@@ -338,7 +454,9 @@ export function WizardGame({ goBack }: WizardGameProps) {
     } else {
       // Attack lane (middle)
       for (let x = 3; x < ATTACK_LANE_WIDTH - 3; x++) {
-        const attack = attacks.find((a) => Math.floor(a.x) === x && a.lane === laneIndex);
+        const attack = attacks.find(
+          (a) => Math.floor(a.x) === x && a.lane === laneIndex,
+        );
         if (attack) {
           let color = "#ffc107";
           if (attack.x < 10) color = "#f44336";
@@ -367,44 +485,171 @@ export function WizardGame({ goBack }: WizardGameProps) {
   const healthBarWidth = 15;
   const playerHealthFilled = Math.round((playerHealth / 100) * healthBarWidth);
   const monsterMaxHealth = 100 + Math.floor(score / 50) * 20;
-  const monsterHealthFilled = Math.round((monsterHealth / monsterMaxHealth) * healthBarWidth);
+  const monsterHealthFilled = Math.round(
+    (monsterHealth / monsterMaxHealth) * healthBarWidth,
+  );
 
   const laneLabels = ["↑", "─", "↓"];
 
   return (
-    <box width="100%" height="100%" flexDirection="column" alignItems="center" justifyContent="center">
-      <text fg="#9c27b0"><b>◆ SPELL CASTER ◆</b></text>
+    <box
+      width="100%"
+      height="100%"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <text fg="#9c27b0">
+        <b>◆ SPELL CASTER ◆</b>
+      </text>
 
       {gameState === "ready" && (
         <>
-          <text fg="#ce93d8" marginTop={2}>Type spells & dodge attacks!</text>
+          <text fg="#ce93d8" marginTop={2}>
+            Type spells & dodge attacks!
+          </text>
           <box marginTop={1} flexDirection="column" alignItems="center">
             <text fg="#888888">Type the incantation, then ENTER to cast</text>
-            <text fg="#888888">Use j/k to dodge attacks AND aim at the monster</text>
-            <text fg="#4fc3f7" marginTop={1}>You must be in the same lane as the monster to hit!</text>
+            <text fg="#888888">
+              Use j/k to dodge attacks AND aim at the monster
+            </text>
+            <text fg="#4fc3f7" marginTop={1}>
+              You must be in the same lane as the monster to hit!
+            </text>
             <text fg="#888888">Spells get harder as you progress...</text>
           </box>
-          <text fg="#4caf50" marginTop={3}>Press ENTER to begin</text>
-          <text fg="#666666" marginTop={1}>ESC to return</text>
+          <text fg="#4caf50" marginTop={3}>
+            Press ENTER to begin
+          </text>
+          <text fg="#666666" marginTop={1}>
+            ESC to return
+          </text>
         </>
       )}
 
       {gameState === "playing" && (
         <>
+          {/* Spell Book Overlay */}
+          {bookOpen && (
+            <box
+              position="absolute"
+              top={0}
+              left={0}
+              width="100%"
+              height="100%"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <box
+                border={true}
+                borderStyle="double"
+                borderColor="#9c27b0"
+                paddingLeft={2}
+                paddingRight={2}
+                paddingTop={1}
+                paddingBottom={1}
+                flexDirection="column"
+              >
+                <text fg="#9c27b0">
+                  <b>📖 SPELL BOOK 📖</b>
+                </text>
+                <text fg="#666666" marginTop={1}>
+                  ─────────────────────────
+                </text>
+                <text fg="#ffffff" marginTop={1}>
+                  <b>Movement</b>
+                </text>
+                <text fg="#888888"> j/k Move down/up</text>
+                <text fg="#888888"> 2j, 3k Move multiple lanes</text>
+                <text fg="#ffffff" marginTop={1}>
+                  <b>Elements</b>
+                </text>
+                <text fg="#888888"> h/l Cycle element left/right</text>
+                <text fg="#4caf50"> Match monster weakness = 2x damage!</text>
+                <text fg="#ffffff" marginTop={1}>
+                  <b>Combat</b>
+                </text>
+                <text fg="#888888"> Type Spell incantation</text>
+                <text fg="#888888"> Enter Cast spell (when ready)</text>
+                <text fg="#888888"> . Repeat last spell</text>
+                <text fg="#666666" marginTop={1}>
+                  ─────────────────────────
+                </text>
+                <text fg="#ffc107" marginTop={1}>
+                  GAME PAUSED
+                </text>
+                <text fg="#4caf50">Press any key to continue</text>
+              </box>
+            </box>
+          )}
+
+          {/* Element display */}
+          <box
+            marginTop={1}
+            width={50}
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <text fg="#888888">{"< "}</text>
+            {ELEMENTS.map((elem, i) => {
+              const isSelected = elem === playerElement;
+              const isMatch = elem === monsterWeakness;
+              return (
+                <text key={elem}>
+                  <span
+                    fg={
+                      isSelected
+                        ? isMatch
+                          ? "#4caf50"
+                          : ELEMENT_INFO[elem].color
+                        : "#444444"
+                    }
+                  >
+                    {isSelected ? "[" : " "}
+                    {ELEMENT_INFO[elem].icon}
+                    {isSelected ? "]" : " "}
+                  </span>
+                </text>
+              );
+            })}
+            <text fg="#888888">{" >"}</text>
+            {playerElement === monsterWeakness && (
+              <text fg="#4caf50">
+                {" "}
+                <b>2x!</b>
+              </text>
+            )}
+            <text fg="#666666"> ?=help</text>
+          </box>
+
           {/* Health bars */}
-          <box marginTop={1} width={50} flexDirection="row" justifyContent="space-between">
+          <box
+            marginTop={1}
+            width={50}
+            flexDirection="row"
+            justifyContent="space-between"
+          >
             <box flexDirection="column">
               <text fg="#888888">You</text>
               <box flexDirection="row">
-                <text fg={playerHealth < 30 ? "#f44336" : "#4caf50"}>{"█".repeat(playerHealthFilled)}</text>
-                <text fg="#333333">{"░".repeat(healthBarWidth - playerHealthFilled)}</text>
+                <text fg={playerHealth < 30 ? "#f44336" : "#4caf50"}>
+                  {"█".repeat(playerHealthFilled)}
+                </text>
+                <text fg="#333333">
+                  {"░".repeat(healthBarWidth - playerHealthFilled)}
+                </text>
               </box>
             </box>
             <box flexDirection="column" alignItems="flex-end">
-              <text fg="#888888">Monster</text>
+              <text fg="#888888">
+                Monster {ELEMENT_INFO[monsterWeakness].icon}
+              </text>
               <box flexDirection="row">
                 <text fg="#f44336">{"█".repeat(monsterHealthFilled)}</text>
-                <text fg="#333333">{"░".repeat(healthBarWidth - monsterHealthFilled)}</text>
+                <text fg="#333333">
+                  {"░".repeat(healthBarWidth - monsterHealthFilled)}
+                </text>
               </box>
             </box>
           </box>
@@ -414,7 +659,9 @@ export function WizardGame({ goBack }: WizardGameProps) {
             marginTop={1}
             border={true}
             borderStyle="rounded"
-            borderColor={hitAnimation ? "#f44336" : healAnimation ? "#4caf50" : "#9c27b0"}
+            borderColor={
+              hitAnimation ? "#f44336" : healAnimation ? "#4caf50" : "#9c27b0"
+            }
             width={52}
             flexDirection="column"
             paddingLeft={1}
@@ -430,12 +677,17 @@ export function WizardGame({ goBack }: WizardGameProps) {
             {/* Lanes */}
             {[0, 1, 2].map((laneIndex) => (
               <box key={laneIndex} flexDirection="row">
-                <text fg={playerLane === laneIndex ? "#4fc3f7" : "#333333"} width={2}>
+                <text
+                  fg={playerLane === laneIndex ? "#4fc3f7" : "#333333"}
+                  width={2}
+                >
                   {laneLabels[laneIndex]}
                 </text>
                 <text>
                   {buildLaneContent(laneIndex).map((item, i) => (
-                    <span key={i} fg={item.color}>{item.char}</span>
+                    <span key={i} fg={item.color}>
+                      {item.char}
+                    </span>
                   ))}
                 </text>
               </box>
@@ -448,7 +700,11 @@ export function WizardGame({ goBack }: WizardGameProps) {
               {currentSpell.heal ? "🩹 " : "⚔️ "}
               <b>{currentSpell.name}</b>{" "}
               <span fg="#888888">
-                ({currentSpell.heal ? `+${currentSpell.heal} HP` : `${currentSpell.damage} dmg`})
+                (
+                {currentSpell.heal
+                  ? `+${currentSpell.heal} HP`
+                  : `${currentSpell.damage} dmg`}
+                )
               </span>
             </text>
 
@@ -456,7 +712,13 @@ export function WizardGame({ goBack }: WizardGameProps) {
               marginTop={1}
               border={true}
               borderStyle="rounded"
-              borderColor={spellReady ? "#4caf50" : currentSpell.heal ? "#4caf50" : "#9c27b0"}
+              borderColor={
+                spellReady
+                  ? "#4caf50"
+                  : currentSpell.heal
+                    ? "#4caf50"
+                    : "#9c27b0"
+              }
               paddingLeft={2}
               paddingRight={2}
               paddingTop={1}
@@ -493,20 +755,32 @@ export function WizardGame({ goBack }: WizardGameProps) {
           <text fg="#9c27b0" marginTop={1}>
             Score: <b>{score}</b>
           </text>
-          <text fg="#666666">j/k dodge & aim | Type spell | ENTER cast | ESC quit</text>
+          <text fg="#666666">
+            j/k move | h/l element | Type | ENTER cast | ? help
+          </text>
         </>
       )}
 
       {gameState === "gameover" && (
         <>
-          <text fg="#f44336" marginTop={2}>YOU HAVE FALLEN!</text>
+          <text fg="#f44336" marginTop={2}>
+            YOU HAVE FALLEN!
+          </text>
           <text fg="#ce93d8" marginTop={2}>
             Final Score: <b>{score}</b>
           </text>
-          {score >= highScore && score > 0 && <text fg="#ffc107">NEW HIGH SCORE!</text>}
-          <text fg="#888888" marginTop={1}>Best: {highScore}</text>
-          <text fg="#4caf50" marginTop={3}>Press ENTER to try again</text>
-          <text fg="#666666" marginTop={1}>ESC to return</text>
+          {score >= highScore && score > 0 && (
+            <text fg="#ffc107">NEW HIGH SCORE!</text>
+          )}
+          <text fg="#888888" marginTop={1}>
+            Best: {highScore}
+          </text>
+          <text fg="#4caf50" marginTop={3}>
+            Press ENTER to try again
+          </text>
+          <text fg="#666666" marginTop={1}>
+            ESC to return
+          </text>
         </>
       )}
     </box>
