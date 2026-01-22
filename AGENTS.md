@@ -62,34 +62,41 @@ Walk through steps in order. For each step:
 
 ### Step Files
 
-Read these in order (skip completed steps):
+**Read step metadata from `steps/MANIFEST.yaml`** - this is the source of truth for:
+- Step ordering and dependencies
+- Which steps are required vs optional vs recommended
+- Time estimates
+- Notes and warnings
 
-1. `steps/01-prerequisites.md` - Homebrew, Git basics
-2. `steps/02-ghostty.md` - Terminal emulator setup
-3. `steps/03-zsh-and-p10k.md` - Shell and prompt
-4. `steps/04-tmux.md` - Terminal multiplexer
-5. `steps/05-claude-code.md` - Installing and configuring Claude Code
-6. `steps/06-first-project.md` - Hands-on practice
-7. `steps/07-gastown.md` - Multi-agent workspaces
-8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP
-9. `steps/09-playwright.md` - Browser automation with Playwright
-10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL]**
-11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK]**
-12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED]**
-13. `steps/13-karabiner.md` - Keyboard customization (Caps Lock → Escape + tmux prefix) **[RECOMMENDED]**
+```bash
+cat steps/MANIFEST.yaml
+```
 
-### Handling Optional vs Quick Steps
+Key metadata fields:
+- `required: true` - User must complete this step
+- `optional: true` - Always ask user before starting (can skip entirely)
+- `recommended: true` - Encouraged but skippable without asking
+- `status: missing` - File doesn't exist yet, use the corresponding skill instead
 
-**For OPTIONAL steps (like gcalcli):**
+### Handling Step Types
+
+**For REQUIRED steps:**
+- Proceed through these in order
+- Skip if already completed (check verification commands)
+
+**For OPTIONAL steps (marked `optional: true`):**
 - Always ask the user first before starting the step
 - Say something like: "Would you like to set up [tool]? This is optional and takes ~X minutes. You can always do this later by asking me to 'set up [tool]'."
 - If they decline, skip entirely and move on
-- The user can request optional setups anytime by saying "set up gcalcli later" or similar
+- The user can request optional setups anytime
 
-**For QUICK steps (like terminal power tools):**
-- These are recommended for everyone
-- They install fast (~30 seconds) and provide immediate value
+**For RECOMMENDED steps (marked `recommended: true`):**
+- Encouraged for everyone
 - Still mention what you're about to do, but proceed unless they object
+
+**For QUICK steps (marked with `quick` tag or `time_estimate: "< 1 min"`):**
+- Fast to complete, provide immediate value
+- Proceed unless user objects
 
 ### Phase 3: Interactive Learning
 

@@ -1,0 +1,103 @@
+# Skills Manifest
+# Source of truth for available skills
+# Any agent adding skills MUST update this file
+
+version: 1
+
+# Skill categories
+categories:
+  setup: "Installation and configuration skills"
+  learning: "Teaching and tutorial skills"
+  workflow: "Development workflow skills"
+
+skills:
+  # === Setup Skills ===
+
+  - name: onboard
+    category: setup
+    description: "Master orchestrator for onboarding. Guides new team members through complete dev environment setup."
+    invokes:
+      - setup-ghostty
+      - setup-shell
+      - setup-karabiner
+      - setup-zoxide
+      - setup-glow
+      - setup-gcalcli
+      - setup-linear
+      - setup-notion
+      - setup-claude-project
+      - tmux-tutorial
+      - fzf-tips
+
+  - name: setup-ghostty
+    category: setup
+    description: "Install and configure Ghostty terminal emulator"
+    time_estimate: "2-3 min"
+
+  - name: setup-shell
+    category: setup
+    description: "Set up Zsh + Oh My Zsh + Powerlevel10k prompt"
+    time_estimate: "3-5 min"
+
+  - name: setup-karabiner
+    category: setup
+    description: "Configure Caps Lock as Escape (tap) and Control (hold)"
+    time_estimate: "2-3 min"
+
+  - name: setup-zoxide
+    category: setup
+    description: "Install zoxide - smarter cd command that learns your habits"
+    time_estimate: "1-2 min"
+
+  - name: setup-glow
+    category: setup
+    description: "Install glow - beautiful markdown viewer for terminal"
+    time_estimate: "1 min"
+
+  - name: setup-gcalcli
+    category: setup
+    description: "Set up Google Calendar CLI with OAuth. Requires interactive walkthrough."
+    time_estimate: "5-10 min"
+    note: "Requires browser access to Google Cloud Console"
+
+  - name: setup-linear
+    category: setup
+    description: "Set up Linear MCP and optionally Beads for git-backed issue tracking"
+    time_estimate: "2-3 min"
+
+  - name: setup-notion
+    category: setup
+    description: "Set up Notion MCP for searching and reading Notion docs"
+    time_estimate: "1-2 min"
+
+  - name: setup-claude-project
+    category: setup
+    description: "Set up Claude Code best practices for any repository (CLAUDE.md, skills, etc.)"
+    time_estimate: "5-10 min"
+
+  # === Learning Skills ===
+
+  - name: tmux-tutorial
+    category: learning
+    description: "Interactive tmux tutorial - teaches hands-on, one step at a time"
+    time_estimate: "10-15 min"
+    dependencies:
+      - tmux installed
+
+  - name: fzf-tips
+    category: learning
+    description: "Power tips for fzf (fuzzy finder) - shortcuts and advanced usage"
+    time_estimate: "5 min"
+    dependencies:
+      - fzf installed
+
+  - name: agent-skills
+    category: learning
+    description: "Learn about Agent Skills - how AI agents use skills, create new skills, understand skill discovery"
+    time_estimate: "varies"
+
+# Notes:
+# - Skills are invoked with /skill-name syntax
+# - The onboard skill is the main entry point and orchestrates other skills
+# - Skills should be agent-agnostic (work with any AI agent, not just Claude)
+# - Follow agentskills.io specification: https://agentskills.io/specification
