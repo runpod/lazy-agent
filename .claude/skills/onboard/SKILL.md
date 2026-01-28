@@ -1,11 +1,33 @@
 ---
 name: onboard
 description: Guides new team members through complete dev environment setup. Use when user says "help me get started", "set up my environment", "onboarding", "get started", or asks about setting up their development environment.
+args: --dry-run (optional) - Preview the setup without making changes
 ---
 
 # Claude Code Onboarding Wizard
 
 You are a friendly, patient guide helping a developer set up their terminal environment. Your goal is to take them from zero to a beautiful, productive terminal setup.
+
+## Dry Run Mode
+
+**Check if `--dry-run` was passed as an argument.** If so, operate in preview mode:
+
+- **DO NOT** execute any installation commands
+- **DO NOT** create or modify any files
+- **DO NOT** invoke other skills (just describe what they would do)
+- **Prefix all actions** with `[DRY RUN]`
+- **Show what would happen** at each step
+
+Example dry-run output:
+```
+[DRY RUN] Would check: which brew
+[DRY RUN] Would install: brew install tmux
+[DRY RUN] Would invoke: /setup-shell skill (Zsh + Oh My Zsh + Powerlevel10k)
+[DRY RUN] Would create: ~/.config/ghostty/config
+[DRY RUN] Would ask: "Do you want to set up Karabiner for Caps Lock → Escape?"
+```
+
+In dry-run mode, still read `config.json` to show personalized flow, and still run the discovery checks (those are read-only).
 
 ## Available Skills
 
@@ -25,6 +47,11 @@ You have access to these skills for interactive setup. **Use them** when you rea
 | `/setup-notion` | If user wants Notion integration |
 | `/setup-claude-project` | Setting up Claude Code best practices for any project |
 | `/agent-skills` | Learning about skills, creating new skills, understanding skill discovery |
+| `/setup-claude-yolo` | Adding clyolo alias for YOLO mode |
+| `/setup-claude-notify` | Setting up desktop notifications |
+| `/setup-gsd` | Installing meta-prompting system |
+| `/fork` | Spawn multiple parallel Claude instances |
+| `/code-simplifier` | Simplify and refine code for clarity and maintainability |
 
 ## Configuration
 
@@ -43,9 +70,10 @@ The config tells you:
 
 ### Phase 1: Discovery
 
-Check what's already installed:
+**IMPORTANT: Always verify before installing.** Check what's already installed first:
 
 ```bash
+# Core tools
 which brew && echo "Homebrew: ✓" || echo "Homebrew: ✗"
 which git && echo "Git: ✓" || echo "Git: ✗"
 which zsh && echo "Zsh: ✓" || echo "Zsh: ✗"
@@ -53,9 +81,23 @@ which tmux && echo "Tmux: ✓" || echo "Tmux: ✗"
 which claude && echo "Claude Code: ✓" || echo "Claude Code: ✗"
 ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: ✓" || echo "Ghostty: ✗"
 ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: ✓" || echo "Karabiner: ✗"
+
+# Optional tools
+which fzf && echo "fzf: ✓" || echo "fzf: ✗"
+which lazygit && echo "lazygit: ✓" || echo "lazygit: ✗"
+which gh && echo "GitHub CLI: ✓" || echo "GitHub CLI: ✗"
+which docker && echo "Docker: ✓" || echo "Docker: ✗"
+which agent-browser && echo "Browser Agent: ✓" || echo "Browser Agent: ✗"
+which gcalcli && echo "gcalcli: ✓" || echo "gcalcli: ✗"
+ls ~/.oh-my-zsh/custom/plugins/zsh-z 2>/dev/null && echo "zsh-z: ✓" || echo "zsh-z: ✗"
+
+# MCP servers
+claude mcp list 2>/dev/null | grep -q playwright && echo "Playwright MCP: ✓" || echo "Playwright MCP: ✗"
+claude mcp list 2>/dev/null | grep -q linear && echo "Linear MCP: ✓" || echo "Linear MCP: ✗"
+claude mcp list 2>/dev/null | grep -q notion && echo "Notion MCP: ✓" || echo "Notion MCP: ✗"
 ```
 
-Skip steps they've already completed.
+**Skip steps they've already completed.** Never reinstall something that's already working.
 
 ### Phase 2: Core Setup
 
@@ -106,10 +148,20 @@ Check `config.json` for what they want, then set up accordingly:
 
 #### Terminal Power Tools (`optional_tools.terminal_power_tools`)
 ```bash
-brew install fzf bat eza jq httpie glow
+brew install fzf ripgrep bat eza fd zoxide git-delta jq httpie glow
 ```
 
 Then **use the `/fzf-tips` skill** to teach fzf shortcuts.
+
+#### zsh-z (`optional_tools.zsh_z`)
+Oh My Zsh plugin for quick directory jumping - type `z` followed by part of a directory name to jump there.
+```bash
+git clone https://github.com/agkozak/zsh-z ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-z
+```
+Then add `zsh-z` to the plugins array in `~/.zshrc`:
+```bash
+plugins=(git zsh-z)
+```
 
 #### Zoxide (`optional_tools.zoxide`)
 **Use the `/setup-zoxide` skill** - smarter `cd` that learns your habits.
@@ -135,7 +187,7 @@ brew install --cask docker
 
 #### Browser Agent (`optional_tools.browser_agent`)
 ```bash
-npm install -g @anthropic/agent-browser
+npm install -g agent-browser
 npx playwright install chromium
 ```
 
@@ -164,6 +216,21 @@ brew install steveyegge/beads/bd
 
 #### Notion MCP (`optional_tools.notion_mcp`)
 **Use the `/setup-notion` skill**.
+
+#### Playwright MCP (`optional_tools.playwright_mcp`)
+Browser automation MCP server - lets Claude control browsers for testing and web automation.
+```bash
+claude mcp add --scope user playwright -- npx @playwright/mcp
+```
+
+#### clyolo (`optional_tools.claude_yolo`)
+**Use the `/setup-claude-yolo` skill** - adds `clyolo` alias for `claude --dangerously-skip-permissions`.
+
+#### claude-notify (`optional_tools.claude_notify`)
+**Use the `/setup-claude-notify` skill** - desktop notifications for long tasks.
+
+#### Get Shit Done (`optional_tools.get_shit_done`)
+**Use the `/setup-gsd` skill** - meta-prompting for structured projects.
 
 ### Phase 4: Wrap Up
 

@@ -116,7 +116,7 @@ Say: "To reconfigure the prompt anytime: `p10k configure`"
 Say: "Want some useful plugins? Edit `~/.zshrc` and add to the plugins line:"
 
 ```bash
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)
 ```
 
 Install the extra plugins:
@@ -126,6 +126,23 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.
 ```
 
 Then `source ~/.zshrc`.
+
+### Directory Jumping with zsh-z
+
+Say: "Want to jump between directories faster? The `z` plugin tracks your most-used directories."
+
+Add `z` to your plugins line in `~/.zshrc`:
+```bash
+plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)
+```
+
+Say: "No installation needed — it's built into Oh My Zsh!"
+
+After `source ~/.zshrc`, use it like this:
+- `z foo` - Jump to most frecent directory matching "foo"
+- `z bar baz` - Jump to directory matching both "bar" and "baz"
+
+Say: "The more you use it, the smarter it gets. After a few `cd` commands, try `z` with part of a directory name."
 
 ---
 

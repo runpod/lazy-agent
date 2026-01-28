@@ -41,6 +41,7 @@ Claude will read your config and guide you through a personalized setup.
 ### Recommended
 - **Karabiner-Elements** - Caps Lock → Escape/Ctrl (game changer for vim/tmux)
 - **Terminal Power Tools** - fzf, bat, eza, jq, httpie
+- **zsh-z** - Quick directory jumping with `z` command
 
 ### Developer Tools
 - **lazygit** - Beautiful git TUI
@@ -51,6 +52,7 @@ Claude will read your config and guide you through a personalized setup.
 ### Optional Integrations
 - **Notion MCP** - Let Claude search your Notion docs
 - **Linear MCP** - Let Claude manage Linear issues
+- **Playwright MCP** - Let Claude control browsers for testing/automation
 - **gcalcli** - Google Calendar in terminal
 
 ### Multi-Agent Tools (Advanced)
@@ -136,6 +138,55 @@ This will:
 ## Contributing
 
 PRs welcome! This is meant to evolve as the tools change.
+
+### Adding New Installation Options
+
+To add a new tool or integration to the setup wizard, update these files:
+
+1. **`setup.sh`** - Add the user prompt:
+   ```bash
+   echo -e "${DIM}~1 min, description of tool${NC}"
+   INSTALL_MYTOOL=$(confirm "mytool? (what it does)")
+   ```
+   Then add to the config.json generation:
+   ```bash
+   "mytool": $INSTALL_MYTOOL,
+   ```
+
+2. **`config.example.json`** - Add the default value:
+   ```json
+   "optional_tools": {
+     "mytool": false,
+     ...
+   }
+   ```
+
+3. **`doctor.sh`** - Add verification check:
+   ```bash
+   # For CLI tools:
+   check "mytool" "mytool" "brew install mytool (optional)"
+
+   # For files/plugins:
+   check_file "mytool" "$HOME/.mytool" "install instructions (optional)"
+
+   # For MCP servers:
+   if echo "$MCP_LIST" | grep -q "mytool"; then
+       echo -e "  ${GREEN}✓${NC} mytool MCP"
+   else
+       echo -e "  ${YELLOW}○${NC} mytool MCP ${DIM}- claude mcp add ...${NC}"
+   fi
+   ```
+
+4. **`.claude/skills/onboard/SKILL.md`** - Add installation instructions:
+   ```markdown
+   #### mytool (`optional_tools.mytool`)
+   Description of what this tool does.
+   ```bash
+   install command here
+   ```
+   ```
+
+**Example PR:** See the Playwright MCP or zsh-z additions for reference.
 
 ## Philosophy
 

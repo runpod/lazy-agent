@@ -15,10 +15,15 @@
       "browser_agent": false,
       "docker": false,
       "gcalcli": false,
+      "claude_yolo": true,
+      "claude_notify": true,
+      "get_shit_done": false,
+      "mprocs": false,
       "gastown": false,
       "beads": false,
       "linear_mcp": false,
-      "notion_mcp": false
+      "notion_mcp": false,
+      "playwright_mcp": false
     }
   },
   "preferences": {

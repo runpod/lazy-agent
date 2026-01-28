@@ -25,6 +25,8 @@ const TOOLS: Tool[] = [
   { tier: "core", name: "zoxide", check: "which zoxide", description: "Smarter cd" },
   { tier: "core", name: "delta", check: "which delta", description: "Better git diff" },
   { tier: "core", name: "jq", check: "which jq", description: "JSON processor" },
+  { tier: "core", name: "httpie", check: "which http", description: "Better curl" },
+  { tier: "core", name: "glow", check: "which glow", description: "Markdown viewer" },
 
   // Recommended - Should install
   { tier: "recommended", name: "Ghostty", check: "ls /Applications/Ghostty.app 2>/dev/null", description: "Modern terminal", key: "g" },

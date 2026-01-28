@@ -61,16 +61,24 @@ function App() {
           process.exit(0);
           break;
         case "1":
-          // Install core tools
-          Bun.spawn(["brew", "install", "git", "zsh", "tmux", "fzf", "ripgrep", "bat", "eza", "fd", "zoxide", "delta", "jq"], {
+          // Install core tools - exit TUI, run install, then user can restart
+          console.clear();
+          console.log("\n🔧 Installing core tools...\n");
+          Bun.spawnSync(["brew", "install", "git", "zsh", "tmux", "fzf", "ripgrep", "bat", "eza", "fd", "zoxide", "delta", "jq"], {
             stdio: ["inherit", "inherit", "inherit"],
           });
+          console.log("\n✅ Done! Press any key to continue...");
+          process.exit(0);
           break;
         case "2":
-          // Install recommended tools
-          Bun.spawn(["brew", "install", "lazygit", "gh"], {
+          // Install recommended tools - exit TUI, run install, then user can restart
+          console.clear();
+          console.log("\n🔧 Installing recommended tools...\n");
+          Bun.spawnSync(["brew", "install", "lazygit", "gh"], {
             stdio: ["inherit", "inherit", "inherit"],
           });
+          console.log("\n✅ Done! Press any key to continue...");
+          process.exit(0);
           break;
         case "?":
           navigate("help");

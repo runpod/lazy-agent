@@ -14,7 +14,7 @@ const SETUP_STEPS: SetupStep[] = [
   { id: "git", name: "Git & GitHub CLI", description: "Version control setup", status: "pending" },
   { id: "shell", name: "Zsh + Powerlevel10k", description: "Shell configuration", status: "pending" },
   { id: "tmux", name: "tmux", description: "Terminal multiplexer", status: "pending" },
-  { id: "tools", name: "CLI Tools", description: "fzf, ripgrep, bat, eza, fd, zoxide", status: "pending" },
+  { id: "tools", name: "CLI Tools", description: "fzf, ripgrep, bat, eza, fd, zoxide, delta, jq, httpie, glow", status: "pending" },
   { id: "ghostty", name: "Ghostty", description: "Modern terminal emulator", status: "pending" },
   { id: "claude", name: "Claude Code", description: "AI coding assistant", status: "pending" },
   { id: "dotfiles", name: "Dotfiles", description: "Link configuration files", status: "pending" },
