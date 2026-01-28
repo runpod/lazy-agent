@@ -41,6 +41,7 @@ First, understand what they already have:
 # Check what's installed
 which brew && echo "Homebrew: installed" || echo "Homebrew: not installed"
 which git && echo "Git: installed" || echo "Git: not installed"
+which gh && echo "GitHub CLI: installed" || echo "GitHub CLI: not installed"
 which zsh && echo "Zsh: installed" || echo "Zsh: not installed"
 which tmux && echo "Tmux: installed" || echo "Tmux: not installed"
 which nvim && echo "Neovim: installed" || echo "Neovim: not installed"
@@ -64,7 +65,7 @@ Walk through steps in order. For each step:
 
 Read these in order (skip completed steps):
 
-1. `steps/01-prerequisites.md` - Homebrew, Git basics
+1. `steps/01-prerequisites.md` - Homebrew, Git, GitHub CLI (gh)
 2. `steps/02-ghostty.md` - Terminal emulator setup
 3. `steps/03-zsh-and-p10k.md` - Shell and prompt
 4. `steps/04-tmux.md` - Terminal multiplexer
@@ -118,6 +119,10 @@ tmux -V
 
 # Claude Code
 which claude
+
+# GitHub CLI
+gh --version
+gh auth status
 
 # gcalcli
 which gcalcli
