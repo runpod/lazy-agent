@@ -1,4 +1,13 @@
-# Step 11: Terminal Power Tools [QUICK]
+---
+title: Terminal Power Tools
+time_estimate: 1 min
+required: false
+recommended: true
+tags:
+  - quick
+---
+
+# Step 11: Terminal Power Tools
 
 These tools take 30 seconds to install and make your terminal much nicer.
 

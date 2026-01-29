@@ -1,3 +1,9 @@
+---
+title: Prerequisites
+time_estimate: 5 min
+required: true
+---
+
 # Step 1: Prerequisites
 
 ## What We're Installing

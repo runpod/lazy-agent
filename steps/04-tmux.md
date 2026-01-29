@@ -1,3 +1,11 @@
+---
+title: tmux - The Session Revolution
+time_estimate: 10 min
+required: true
+dependencies:
+  - 01-prerequisites
+---
+
 # Step 4: tmux - The Session Revolution
 
 > **Time:** ~10 minutes
