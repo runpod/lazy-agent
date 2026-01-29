@@ -60,7 +60,7 @@ echo -e "${DIM}These are installed for everyone (~10 min total):${NC}"
 echo "  - Ghostty (terminal emulator)"
 echo "  - Zsh + Oh My Zsh + Powerlevel10k"
 echo "  - tmux (terminal multiplexer)"
-echo "  - Claude Code"
+echo "  - AI agent CLI (Claude Code recommended)"
 echo ""
 
 echo -e "${CYAN}=== Keyboard Optimization ===${NC}"
@@ -76,10 +76,10 @@ echo ""
 echo -e "${CYAN}=== Optional Integrations ===${NC}"
 
 echo -e "${DIM}~1 min, uses browser OAuth (no API keys needed)${NC}"
-INSTALL_NOTION=$(confirm "Notion integration? (Claude can search your docs)")
+INSTALL_NOTION=$(confirm "Notion integration? (your AI agent can search your docs)")
 
 echo -e "${DIM}~1 min, uses browser OAuth (no API keys needed)${NC}"
-INSTALL_LINEAR=$(confirm "Linear integration? (Claude can manage issues)")
+INSTALL_LINEAR=$(confirm "Linear integration? (your AI agent can manage issues)")
 
 echo ""
 echo -e "${CYAN}=== Developer Tools ===${NC}"
@@ -101,7 +101,7 @@ INSTALL_GCALCLI=$(confirm "gcalcli? (Google Calendar in terminal)")
 
 echo ""
 echo -e "${CYAN}=== Multi-Agent Tools ===${NC}"
-echo -e "${DIM}For coordinating multiple Claude sessions${NC}"
+echo -e "${DIM}For coordinating multiple agent sessions${NC}"
 
 echo -e "${DIM}~1 min, Go install${NC}"
 INSTALL_GASTOWN=$(confirm "Gastown? (multi-agent workspace coordination)")
@@ -166,7 +166,7 @@ echo -e "Estimated setup time: ${GREEN}~${TOTAL_TIME} minutes${NC}"
 if [ "$INSTALL_GCALCLI" = "true" ]; then
     echo ""
     echo -e "${YELLOW}Note: gcalcli requires creating a Google Cloud OAuth app.${NC}"
-    echo -e "${YELLOW}Claude will walk you through this step-by-step.${NC}"
+    echo -e "${YELLOW}Your AI agent will walk you through this step-by-step.${NC}"
 fi
 
 echo ""
@@ -187,11 +187,11 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 echo "Next steps:"
 echo ""
-echo "  1. Start Claude Code:"
-echo -e "     ${CYAN}claude${NC}"
+echo "  1. Start your AI agent CLI:"
+echo -e "     ${CYAN}claude${NC} (Claude Code)"
 echo ""
 echo "  2. Say:"
 echo -e "     ${CYAN}help me get started${NC}"
 echo ""
-echo "Claude will guide you through installing everything."
+echo "Your AI agent will guide you through installing everything."
 echo ""
