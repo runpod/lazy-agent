@@ -29,33 +29,87 @@ Personalize your responses using this config. For example:
 - **Practical**: Focus on what they'll actually use day-to-day.
 - **Curious**: Ask about their preferences (dark mode? which editor?).
 
+## Critical Path: Self-Healing Workflow
+
+**The most important early milestone is getting `gh` CLI set up and authenticated.** Once the user has gh working, this wizard becomes self-healing:
+
+1. **Detect OS** → know what commands to use
+2. **Set up git** → can clone repos
+3. **Set up gh CLI + authenticate** → can create PRs
+
+Once gh is working, tell the user:
+
+> "Great! Now if you run into any issues with this wizard - wrong commands, missing steps, anything that doesn't work - just tell me what happened. I'll create a PR to fix it so the next person doesn't hit the same problem."
+
+This creates a feedback loop where:
+- Users report issues naturally during setup
+- Claude creates PRs to fix them
+- The wizard improves over time
+- Future users have a smoother experience
+
+**Prioritize getting to this point quickly.** The rest of the setup is less critical because issues can be fixed via PRs.
+
 ## How to Guide Users
 
 When a user says "help me get started" or similar, follow this flow:
 
 ### Phase 1: Discovery
 
-First, understand what they already have:
+**CRITICAL: First detect the operating system.** This determines which steps apply and which package manager to use.
 
 ```bash
-# Check what's installed
-which brew && echo "Homebrew: installed" || echo "Homebrew: not installed"
+# Detect OS and architecture
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+echo "Operating System: $OS"
+echo "Architecture: $ARCH"
+
+# Detect package manager
+if command -v brew &>/dev/null; then
+    PKG_MGR="brew"
+elif command -v apt &>/dev/null; then
+    PKG_MGR="apt"
+elif command -v dnf &>/dev/null; then
+    PKG_MGR="dnf"
+elif command -v pacman &>/dev/null; then
+    PKG_MGR="pacman"
+else
+    PKG_MGR="unknown"
+fi
+echo "Package manager: $PKG_MGR"
+```
+
+**Store these results** and use them throughout the setup:
+- **macOS**: Use `brew`, offer Karabiner, check `/Applications/` for GUI apps
+- **Linux**: Use apt/dnf/pacman, skip Karabiner, use `which` for CLI tools only
+
+Then check what tools are installed:
+
+```bash
+# Cross-platform checks (work on any OS)
 which git && echo "Git: installed" || echo "Git: not installed"
-which gh && echo "GitHub CLI: installed" || echo "GitHub CLI: not installed"
 which zsh && echo "Zsh: installed" || echo "Zsh: not installed"
 which tmux && echo "Tmux: installed" || echo "Tmux: not installed"
 which nvim && echo "Neovim: installed" || echo "Neovim: not installed"
-ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: installed" || echo "Ghostty: not installed"
-ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
+which claude && echo "Claude Code: installed" || echo "Claude Code: not installed"
+which gh && echo "GitHub CLI: installed" || echo "GitHub CLI: not installed"
+which ghostty && echo "Ghostty: installed" || echo "Ghostty: not installed"
 
 # Check language servers
 which typescript-language-server && echo "TypeScript LSP: installed" || echo "TypeScript LSP: not installed"
 which pyright && echo "Python LSP (pyright): installed" || echo "Python LSP: not installed"
 which gopls && echo "Go LSP: installed" || echo "Go LSP: not installed"
 which rust-analyzer && echo "Rust LSP: installed" || echo "Rust LSP: not installed"
+
+# macOS-only checks (SKIP on Linux)
+if [ "$(uname -s)" = "Darwin" ]; then
+    which brew && echo "Homebrew: installed" || echo "Homebrew: not installed"
+    ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: installed" || echo "Ghostty: not installed"
+    ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
+fi
 ```
 
-Based on results, customize the journey. Skip steps they've already completed.
+Based on results, customize the journey. **Skip steps that don't apply to the user's OS.**
 
 ### Phase 2: Step-by-Step Setup
 
@@ -92,25 +146,57 @@ For **EACH** tool, follow this pattern:
 
 ### Step Files
 
-Read these in order (skip completed steps):
+Read these in order (skip completed steps and steps that don't apply to the user's OS):
 
-1. `steps/01-prerequisites.md` - Homebrew, Git, GitHub CLI (gh)
-2. `steps/02-ghostty.md` - Terminal emulator setup
-3. `steps/03-zsh-and-p10k.md` - Shell and prompt
-4. `steps/04-tmux.md` - Terminal multiplexer
-5. `steps/05-claude-code.md` - Installing and configuring Claude Code
-6. `steps/06-first-project.md` - Hands-on practice
-7. `steps/07-gastown.md` - Multi-agent workspaces
-8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP
-9. `steps/09-playwright.md` - Browser automation with Playwright
-10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL]**
-11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK]**
-12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED]**
-13. `steps/13-karabiner.md` - Keyboard customization (Caps Lock → Escape + tmux prefix) **[RECOMMENDED]**
-14. `steps/14-lsp.md` - Language Server Protocol setup for Claude Code & Neovim **[RECOMMENDED]**
-15. `steps/15-hooks.md` - Deterministic enforcement with hooks (block secrets, auto-format) **[RECOMMENDED]**
-16. `steps/16-skills.md` - Commands & skills system for reusable expertise **[RECOMMENDED]**
-17. `steps/17-best-practices.md` - Chat hygiene, /clear, single-purpose conversations **[QUICK]**
+1. `steps/01-prerequisites.md` - Package manager, Git, gh CLI **[CROSS-PLATFORM]**
+2. `steps/02-ghostty.md` - Terminal emulator setup **[CROSS-PLATFORM]**
+3. `steps/03-zsh-and-p10k.md` - Shell and prompt **[CROSS-PLATFORM]**
+4. `steps/04-tmux.md` - Terminal multiplexer **[CROSS-PLATFORM]**
+5. `steps/05-claude-code.md` - Installing and configuring Claude Code **[CROSS-PLATFORM]**
+6. `steps/06-first-project.md` - Hands-on practice **[CROSS-PLATFORM]**
+7. `steps/07-gastown.md` - Multi-agent workspaces **[CROSS-PLATFORM]**
+8. `steps/08-linear-and-mcp.md` - Linear, Beads sync, Linear MCP, Notion MCP **[CROSS-PLATFORM]**
+9. `steps/09-playwright.md` - Browser automation with Playwright **[CROSS-PLATFORM]**
+10. `steps/10-gcalcli.md` - Google Calendar CLI **[OPTIONAL] [CROSS-PLATFORM]**
+11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK] [CROSS-PLATFORM]**
+12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED] [CROSS-PLATFORM]**
+13. `steps/13-karabiner.md` - Keyboard customization **[macOS-ONLY]** - Skip entirely on Linux!
+14. `steps/14-lsp.md` - Language Server Protocol setup for Claude Code & Neovim **[RECOMMENDED] [CROSS-PLATFORM]**
+15. `steps/15-hooks.md` - Deterministic enforcement with hooks (block secrets, auto-format) **[RECOMMENDED] [CROSS-PLATFORM]**
+16. `steps/16-skills.md` - Commands & skills system for reusable expertise **[RECOMMENDED] [CROSS-PLATFORM]**
+17. `steps/17-best-practices.md` - Chat hygiene, /clear, single-purpose conversations **[QUICK] [CROSS-PLATFORM]**
+
+### CRITICAL: Run Commands Yourself
+
+**DO NOT** ask users to run commands outside of Claude Code. This wastes their time and burns tokens checking status.
+
+**DO:**
+- Run installation commands directly using the Bash tool
+- Verify the result immediately after running
+- Move on to the next step
+
+**DON'T:**
+- Say "please run this command in your terminal"
+- Ask "have you finished running the command?"
+- Wait for confirmation that they ran something
+
+### OS-Aware Package Installation
+
+Use the correct package manager based on detected OS:
+
+| Tool | macOS (brew) | Ubuntu/Debian (apt) | Fedora (dnf) | Arch (pacman) |
+|------|--------------|---------------------|--------------|---------------|
+| tmux | `brew install tmux` | `sudo apt install tmux` | `sudo dnf install tmux` | `sudo pacman -S tmux` |
+| git | `brew install git` | `sudo apt install git` | `sudo dnf install git` | `sudo pacman -S git` |
+| zsh | `brew install zsh` | `sudo apt install zsh` | `sudo dnf install zsh` | `sudo pacman -S zsh` |
+| fzf | `brew install fzf` | `sudo apt install fzf` | `sudo dnf install fzf` | `sudo pacman -S fzf` |
+| bat | `brew install bat` | `sudo apt install bat` | `sudo dnf install bat` | `sudo pacman -S bat` |
+| jq | `brew install jq` | `sudo apt install jq` | `sudo dnf install jq` | `sudo pacman -S jq` |
+| gh | `brew install gh` | See [gh Linux install](https://github.com/cli/cli/blob/trunk/docs/install_linux.md) | `sudo dnf install gh` | `sudo pacman -S github-cli` |
+
+**For tools not in package managers** (like lazygit on some distros), download from GitHub releases:
+- Always use **lowercase** for OS/arch in URLs: `linux_amd64`, `linux_arm64` (NOT `Linux_arm64`)
+- Check the actual release URL before running wget/curl
 
 ### Handling Optional vs Quick Steps
 
@@ -125,6 +211,12 @@ Read these in order (skip completed steps):
 - They install fast (~30 seconds) and provide immediate value
 - Still mention what you're about to do, but proceed unless they object
 
+### Handling macOS-Only Steps
+
+**Karabiner-Elements is macOS-only.** On Linux:
+- Skip step 13 entirely - don't even mention it
+- Linux users can use `xcape` or `keyd` for similar Caps Lock remapping, but this is out of scope for this wizard
+
 ### Phase 3: Interactive Learning
 
 After setup is complete:
@@ -135,27 +227,23 @@ After setup is complete:
 
 ## Verification Commands
 
-After each major step, verify it worked:
+After each major step, verify it worked. **Use cross-platform checks:**
 
 ```bash
-# Ghostty
-ls /Applications/Ghostty.app
+# Cross-platform verifications (work on any OS)
+which git && git --version
+which zsh && zsh --version
+which tmux && tmux -V
+which claude && echo "Claude Code: installed"
+which gh && gh --version
+gh auth status
+which ghostty && ghostty --version
 
 # Oh My Zsh
 ls ~/.oh-my-zsh
 
 # Powerlevel10k
 ls ~/.oh-my-zsh/custom/themes/powerlevel10k 2>/dev/null || ls ~/.powerlevel10k 2>/dev/null
-
-# Tmux
-tmux -V
-
-# Claude Code
-which claude
-
-# GitHub CLI
-gh --version
-gh auth status
 
 # gcalcli
 which gcalcli
@@ -167,8 +255,11 @@ eza --version
 jq --version
 http --version
 
-# Karabiner-Elements
-ls /Applications/Karabiner-Elements.app
+# macOS-ONLY verifications (skip on Linux!)
+if [ "$(uname -s)" = "Darwin" ]; then
+    ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty.app: installed"
+    ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed"
+fi
 ```
 
 ## Handling Problems
@@ -367,3 +458,56 @@ This is great for users who want to:
 - Create custom skills for their workflows
 - Learn the Agent Skills specification
 - See real-time narration of skill usage
+
+## Vibecoding: Add Your Page to the TUI
+
+**This is the fun part!** After setup is complete, invite the user to contribute to the project:
+
+> "Now that you're all set up, want to try some vibecoding? This project has a TUI (terminal user interface) with mini-games and tools. I'd love for you to add your own page to it - whatever you can dream of! A game, a tool, ASCII art, anything. Then we'll make a PR together so your contribution becomes part of the project for future users."
+
+### How to Guide Vibecoding
+
+1. **Show them the existing TUI:**
+   ```bash
+   cd lazy-tui && bun run dev
+   ```
+
+2. **Explore what's already there:**
+   - Games (Pirate, Wizard)
+   - Tools page
+   - Setup page
+
+3. **Ask what they want to create:**
+   - "What kind of page would you like to add?"
+   - "Could be a game, a tool, ASCII art, a joke page, anything!"
+
+4. **Create it together:**
+   - Create a new branch: `git checkout -b feat/add-[their-idea]`
+   - Build the page collaboratively
+   - Test it in the TUI
+
+5. **Make the PR:**
+   - `git add . && git commit -m "feat: add [their-idea] page to TUI"`
+   - `git push -u origin feat/add-[their-idea]`
+   - `gh pr create --title "feat: add [their-idea] to TUI" --body "Added by a new user during onboarding!"`
+
+6. **Celebrate:**
+   - "You just made your first contribution! When this gets merged, everyone who goes through this wizard will see your creation."
+
+### Why This Matters
+
+- **Learning by doing**: Users learn git, PRs, and vibecoding in a low-stakes, fun way
+- **Community building**: The TUI becomes a collection of user contributions
+- **Self-improving wizard**: Users are invested in the project's success
+- **Portfolio piece**: Users can point to their merged PR
+
+### Example Ideas to Suggest
+
+If they're stuck, suggest:
+- A fortune cookie / random quote page
+- A simple snake or pong game
+- An ASCII art gallery
+- A "dad jokes" page
+- A productivity timer
+- A motivational message generator
+- Their own spin on an existing game
