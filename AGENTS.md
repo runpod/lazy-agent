@@ -47,6 +47,12 @@ which tmux && echo "Tmux: installed" || echo "Tmux: not installed"
 which nvim && echo "Neovim: installed" || echo "Neovim: not installed"
 ls /Applications/Ghostty.app 2>/dev/null && echo "Ghostty: installed" || echo "Ghostty: not installed"
 ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
+
+# Check language servers
+which typescript-language-server && echo "TypeScript LSP: installed" || echo "TypeScript LSP: not installed"
+which pyright && echo "Python LSP (pyright): installed" || echo "Python LSP: not installed"
+which gopls && echo "Go LSP: installed" || echo "Go LSP: not installed"
+which rust-analyzer && echo "Rust LSP: installed" || echo "Rust LSP: not installed"
 ```
 
 Based on results, customize the journey. Skip steps they've already completed.
@@ -101,6 +107,10 @@ Read these in order (skip completed steps):
 11. `steps/11-terminal-power-tools.md` - Terminal power tools (fzf, bat, eza, jq, httpie) **[QUICK]**
 12. `steps/12-notion-mcp.md` - Notion MCP integration **[RECOMMENDED]**
 13. `steps/13-karabiner.md` - Keyboard customization (Caps Lock → Escape + tmux prefix) **[RECOMMENDED]**
+14. `steps/14-lsp.md` - Language Server Protocol setup for Claude Code & Neovim **[RECOMMENDED]**
+15. `steps/15-hooks.md` - Deterministic enforcement with hooks (block secrets, auto-format) **[RECOMMENDED]**
+16. `steps/16-skills.md` - Commands & skills system for reusable expertise **[RECOMMENDED]**
+17. `steps/17-best-practices.md` - Chat hygiene, /clear, single-purpose conversations **[QUICK]**
 
 ### Handling Optional vs Quick Steps
 

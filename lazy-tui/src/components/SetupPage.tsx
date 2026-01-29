@@ -17,6 +17,9 @@ const SETUP_STEPS: SetupStep[] = [
   { id: "tools", name: "CLI Tools", description: "fzf, ripgrep, bat, eza, fd, zoxide", status: "pending" },
   { id: "ghostty", name: "Ghostty", description: "Modern terminal emulator", status: "pending" },
   { id: "claude", name: "Claude Code", description: "AI coding assistant", status: "pending" },
+  { id: "lsp", name: "Language Servers", description: "LSP for smarter code intelligence", status: "pending" },
+  { id: "hooks", name: "Hooks", description: "Deterministic enforcement (block secrets)", status: "pending" },
+  { id: "skills", name: "Skills", description: "Reusable commands & expertise", status: "pending" },
   { id: "dotfiles", name: "Dotfiles", description: "Link configuration files", status: "pending" },
 ];
 
