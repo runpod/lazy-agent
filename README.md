@@ -2,9 +2,15 @@
 
 Like LazyVim, but for terminal-based AI agent workflows. Get a beautiful, productive terminal setup in minutes.
 
+Designed for Claude Code, but compatible with other AI agent CLIs that can read `AGENTS.md` (or `CLAUDE.md`) and run shell commands.
+
 ## Who Is This For?
 
-**Best for:** Developers who want to use Claude Code effectively and are comfortable (or want to become comfortable) with terminal-based workflows.
+**Best for:** Developers who want to use Claude Code or another AI agent CLI effectively and are comfortable (or want to become comfortable) with terminal-based workflows.
+
+**Works with:**
+- Claude Code (recommended and tested)
+- Other agent CLIs that can read `AGENTS.md`/`CLAUDE.md` and execute shell commands
 
 **You should know:**
 - Basic command line navigation (`cd`, `ls`, `mkdir`)
@@ -14,12 +20,12 @@ Like LazyVim, but for terminal-based AI agent workflows. Get a beautiful, produc
 **You'll learn:**
 - tmux (terminal multiplexer) - we'll teach you interactively
 - Vim-style navigation - optional but powerful
-- How to work effectively with Claude Code
+- How to work effectively with Claude Code or another AI agent CLI
 
 **What to expect:**
 - The wizard will guide you through each tool **one at a time**
-- For each tool, Claude explains **what it does and why** before installing
-- After installation, Claude shows you **how to use it** with hands-on examples
+- For each tool, your AI agent explains **what it does and why** before installing
+- After installation, your AI agent shows you **how to use it** with hands-on examples
 - You can skip any tool you don't want
 - Total setup takes 15-30 minutes depending on your choices
 
@@ -32,10 +38,12 @@ Like LazyVim, but for terminal-based AI agent workflows. Get a beautiful, produc
 
 ## Quick Start
 
-1. **Install Claude Code** (if you don't have it):
-   ```bash
-   npm install -g @anthropic-ai/claude-code
-   ```
+1. **Pick an AI agent CLI**:
+   - **Claude Code (recommended):**
+     ```bash
+     npm install -g @anthropic-ai/claude-code
+     ```
+   - **Other agent CLIs:** ensure they can read `AGENTS.md`/`CLAUDE.md` and run shell commands
 
 2. **Clone this repo**:
    ```bash
@@ -54,9 +62,11 @@ Like LazyVim, but for terminal-based AI agent workflows. Get a beautiful, produc
    # Edit config.json with your name and preferences
    ```
 
-4. **Run Claude Code and say**: "help me get started"
+4. **Run your agent and say**: "help me get started"
 
-Claude will read your config and guide you through a personalized setup.
+   If you're using a non-Claude agent, also tell it to follow `AGENTS.md`.
+
+Your AI agent will read your config and guide you through a personalized setup.
 
 ## Interactive TUI
 
@@ -85,7 +95,7 @@ The TUI includes:
 - **Ghostty** - Fast, GPU-accelerated terminal
 - **Zsh + Oh My Zsh + Powerlevel10k** - Beautiful shell with great defaults
 - **tmux** - Terminal multiplexer with vim-style navigation
-- **Claude Code** - AI-powered coding assistant
+- **AI agent CLI** - Claude Code (recommended) or another agent
 
 ### Recommended
 - **Karabiner-Elements** - Caps Lock → Escape/Ctrl (game changer for vim/tmux)
@@ -98,12 +108,12 @@ The TUI includes:
 - **Docker** - Container runtime
 
 ### Optional Integrations
-- **Notion MCP** - Let Claude search your Notion docs
-- **Linear MCP** - Let Claude manage Linear issues
+- **Notion MCP** - Let your AI agent search your Notion docs
+- **Linear MCP** - Let your AI agent manage Linear issues
 - **gcalcli** - Google Calendar in terminal
 
 ### Multi-Agent Tools (Advanced)
-- **Gastown** - Coordinate multiple Claude sessions **[EXPERIMENTAL - USE WITH CAUTION]**
+- **Gastown** - Coordinate multiple agent sessions **[EXPERIMENTAL - USE WITH CAUTION]**
 - **Beads** - Git-backed issue tracking with Linear sync
 
 > **Warning**: Gastown is experimental software that gives AI agents significant
@@ -113,12 +123,12 @@ The TUI includes:
 
 - How to navigate tmux like a pro (vim-style keybindings)
 - How to split and manage terminal panes
-- How to use Claude Code effectively
+- How to use Claude Code (or another AI agent CLI) effectively
 - Terminal productivity tips
 
 ## Learning Tmux
 
-Claude teaches you tmux interactively - no separate tutorial needed. Just say:
+Your AI agent teaches you tmux interactively - no separate tutorial needed. Just say:
 - "teach me tmux"
 - "how do I split panes?"
 - "show me the tmux keybindings"
@@ -133,7 +143,8 @@ lazy-agent/
 ├── tui.sh              # Launch the interactive TUI
 ├── doctor.sh           # Check what's installed
 ├── update.sh           # Pull updates and refresh configs
-├── CLAUDE.md           # Instructions for Claude (the wizard brain)
+├── AGENTS.md           # Instructions for AI agents (the wizard brain)
+├── CLAUDE.md           # Claude-compatible alias for AGENTS.md
 ├── config.example.json # Example config (copy to config.json)
 ├── README.md           # You are here
 ├── dotfiles/           # Included configs (tmux, ghostty, karabiner)
@@ -166,9 +177,9 @@ lazy-agent/
 
 ## Need Help?
 
-Just ask Claude! That's the whole point.
+Just ask your AI agent. Claude Code is recommended and fully supported.
 
-If Claude Code isn't installed yet, you can:
+If Claude Code isn't installed yet or you're using another agent, you can:
 - Follow the steps manually in `steps/` directory
 - Check out the [Claude Code documentation](https://docs.anthropic.com/claude-code)
 
