@@ -2,6 +2,34 @@
 
 Like LazyVim, but for terminal-based AI agent workflows. Get a beautiful, productive terminal setup in minutes.
 
+## Who Is This For?
+
+**Best for:** Developers who want to use Claude Code effectively and are comfortable (or want to become comfortable) with terminal-based workflows.
+
+**You should know:**
+- Basic command line navigation (`cd`, `ls`, `mkdir`)
+- How to use a text editor (any editor is fine)
+- Basic git concepts (clone, commit, push)
+
+**You'll learn:**
+- tmux (terminal multiplexer) - we'll teach you interactively
+- Vim-style navigation - optional but powerful
+- How to work effectively with Claude Code
+
+**What to expect:**
+- The wizard will guide you through each tool **one at a time**
+- For each tool, Claude explains **what it does and why** before installing
+- After installation, Claude shows you **how to use it** with hands-on examples
+- You can skip any tool you don't want
+- Total setup takes 15-30 minutes depending on your choices
+
+**This is NOT:**
+- A "run one script and you're done" installer
+- A replacement for understanding your tools
+- Magic - you'll still need to learn and practice
+
+> **Note:** This wizard is designed for macOS primarily. Linux support is available but some tools (like Karabiner) are macOS-only. The wizard will detect your OS and skip incompatible steps.
+
 ## Quick Start
 
 1. **Install Claude Code** (if you don't have it):

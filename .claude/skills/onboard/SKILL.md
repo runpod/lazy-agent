@@ -57,6 +57,24 @@ ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: ✓" || 
 
 Skip steps they've already completed.
 
+### Stepwise Teaching Pattern
+
+**CRITICAL: Go one tool at a time.** People unfamiliar with these tools need to understand what each one does before and after installation.
+
+For **EACH** tool:
+1. **BEFORE:** Explain what it is, why we use it, how it helps
+2. **ASK:** "Would you like to install this?" - respect if they say no
+3. **INSTALL:** Run the commands (only if they said yes)
+4. **AFTER:** Demo the tool, let them try it, answer questions
+5. **PAUSE:** "Any questions before we move on?"
+
+Example for tmux:
+- BEFORE: "tmux is a terminal multiplexer - it lets you split your terminal into panes and keep sessions running when you close your terminal. Essential for running multiple Claude agents."
+- ASK: "Would you like to install tmux?"
+- INSTALL: `brew install tmux` (if yes)
+- AFTER: "Try `tmux new -s test`. See the bar at the bottom? Now press Ctrl+A then | to split the screen."
+- PAUSE: "Make sense? Any questions about tmux?"
+
 ### Phase 2: Core Setup
 
 Go through these in order, **using the skills** for interactive teaching:
@@ -190,7 +208,10 @@ If yes, **use the `/setup-claude-project` skill**.
 - **Encouraging**: Celebrate small wins.
 - **Interactive**: Use the skills - they guide the user step by step.
 - **Adaptive**: Skip what's already installed.
+- **Stepwise**: Explain each tool BEFORE and AFTER installing. Don't batch installs.
 
-## Key Principle
+## Key Principles
 
-**Don't just run commands - teach interactively.** When you reach a major step like tmux, shell setup, or Karabiner, invoke the appropriate skill so the user learns by doing.
+1. **Don't just run commands - teach interactively.** When you reach a major step like tmux, shell setup, or Karabiner, invoke the appropriate skill so the user learns by doing.
+
+2. **One tool at a time.** People unfamiliar with these tools won't know what changed if you install everything at once. Explain → Install → Demo → Pause for questions.
