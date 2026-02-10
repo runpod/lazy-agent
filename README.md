@@ -34,15 +34,12 @@ Designed for Claude Code, but compatible with other AI agent CLIs that can read 
 - A replacement for understanding your tools
 - Magic - you'll still need to learn and practice
 
-> **Note:** This wizard is designed for macOS primarily. Linux support is available but some tools (like Karabiner) are macOS-only. The wizard will detect your OS and skip incompatible steps.
+> **Note:** This wizard works on **macOS** and **Linux**. On **Windows**, we recommend using [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) with Ubuntu — it provides a native Linux experience and all tools work seamlessly. Some tools (like Karabiner) are macOS-only; the wizard will detect your OS and skip incompatible steps.
 
 ## Quick Start
 
 1. **Pick an AI agent CLI**:
-   - **Claude Code (recommended):**
-     ```bash
-     npm install -g @anthropic-ai/claude-code
-     ```
+   - **Claude Code (recommended):** Install using the [native installer](https://docs.anthropic.com/en/docs/claude-code/overview)
    - **Other agent CLIs:** ensure they can read `AGENTS.md`/`CLAUDE.md` and run shell commands
 
 2. **Clone this repo**:
