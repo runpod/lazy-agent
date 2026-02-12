@@ -14,7 +14,7 @@ window-padding-y = 12
 window-decoration = true
 
 # Theme
-theme = dark
+theme = Gruvbox Dark Hard
 
 # Cursor
 cursor-style = block
@@ -32,9 +32,6 @@ shell-integration = zsh
 # Clipboard
 clipboard-read = allow
 clipboard-write = allow
-
-# Performance
-vsync = true
 
 # Keybindings
 # Note: Most navigation is handled by tmux
