@@ -1,20 +1,11 @@
+---
+name: "setup-shell"
+description: "Installs and configures Zsh, Oh My Zsh, and Powerlevel10k prompt with plugins and Nerd Font verification. Use when the user says 'set up shell', 'install zsh', 'oh my zsh', 'powerlevel10k', 'upgrade my shell', or wants a better terminal prompt."
+---
+
 # Shell Setup (Zsh + Oh My Zsh + Powerlevel10k)
 
-Set up a beautiful, powerful shell with Oh My Zsh and Powerlevel10k prompt.
-
-**Time estimate: 3-5 minutes**
-
----
-
-## What You'll Get
-
-- **Zsh** - Better shell than bash
-- **Oh My Zsh** - Plugin framework and nice defaults
-- **Powerlevel10k** - Beautiful, informative prompt
-
-Ask: "Ready to upgrade your shell?"
-
----
+Installs Zsh, Oh My Zsh framework, and Powerlevel10k prompt theme with useful plugins. Time estimate: 3-5 minutes.
 
 ## Step 1: Check Current Shell
 
