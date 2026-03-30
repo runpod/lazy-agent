@@ -1,26 +1,21 @@
+---
+name: "tmux-tutorial"
+description: "Teaches tmux interactively with hands-on exercises covering sessions, panes, navigation, and persistence. Use when the user says 'teach me tmux', 'tmux tutorial', 'how do I use tmux', 'tmux keybindings', or wants to learn terminal multiplexing."
+---
+
 # tmux Interactive Tutorial
 
-Teach the user tmux hands-on, one step at a time.
+Teach tmux hands-on, one step at a time. Give one instruction, ask if it worked, then move on.
 
 ## Before You Start
 
-Check if Karabiner is installed:
+Detect whether Karabiner is installed to determine the prefix:
 
 ```bash
-ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installed" || echo "Karabiner: not installed"
+ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "PREFIX: Caps Lock + A" || echo "PREFIX: Ctrl + A"
 ```
 
-**If Karabiner is installed**: Use "Caps Lock + A" as the prefix (Caps Lock acts as Ctrl).
-**If not installed**: Use "Ctrl + A" as the prefix.
-
-Adapt your instructions accordingly throughout the tutorial.
-
-## How to Teach
-
-1. **Give one instruction at a time**
-2. **Ask if it worked before moving on**
-3. **Celebrate small wins**
-4. **If something doesn't work, help debug**
+Adapt prefix instructions throughout based on result.
 
 ## The Lesson Plan
 

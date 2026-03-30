@@ -1,19 +1,15 @@
-# Ghostty Terminal Setup
-
-Install and configure Ghostty - a fast, GPU-accelerated terminal.
-
-**Time estimate: 2-3 minutes**
-
+---
+name: "setup-ghostty"
+description: "Installs and configures Ghostty GPU-accelerated terminal with Nerd Font and dotfiles config. Use when the user says 'install ghostty', 'set up ghostty', 'setup terminal', 'ghostty config', or wants a fast modern terminal emulator."
 ---
 
-## Why Ghostty?
+# Ghostty Terminal Setup
 
-Say: "Ghostty is a modern terminal that's:"
-- **Fast** - GPU-accelerated rendering
-- **Beautiful** - Great font rendering and themes
-- **Native** - Feels like a real Mac app
+Installs and configures Ghostty — a fast, GPU-accelerated terminal — with Nerd Font and project dotfiles. Time estimate: 2-3 minutes.
 
-Ask: "Ready to install Ghostty?"
+## Step 1: Explain and Confirm
+
+Ghostty is GPU-accelerated, has excellent font rendering, and feels native on macOS. Ask if the user wants to proceed.
 
 ---
 

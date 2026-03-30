@@ -1,6 +1,6 @@
 ---
-name: onboard
-description: Guides new team members through complete dev environment setup. Use when user says "help me get started", "set up my environment", "onboarding", "get started", or asks about setting up their development environment.
+name: "onboard"
+description: "Detects OS, installs core tools (Ghostty, Zsh, tmux, Claude Code), configures optional integrations, and teaches each tool interactively. Use when the user says 'help me get started', 'set up my environment', 'onboarding', 'get started', or asks about setting up their development environment."
 ---
 
 # Claude Code Onboarding Wizard
@@ -123,6 +123,8 @@ fi
 
 **Remember the OS** and skip steps that don't apply (e.g., Karabiner on Linux).
 
+**Checkpoint:** Confirm OS detection is correct with the user before proceeding.
+
 ### CRITICAL: Run Commands Yourself
 
 **DO NOT** ask users to run commands outside of Claude Code. Run them directly:
@@ -136,19 +138,7 @@ fi
 
 **CRITICAL: Go one tool at a time.** People unfamiliar with these tools need to understand what each one does before and after installation.
 
-For **EACH** tool:
-1. **BEFORE:** Explain what it is, why we use it, how it helps
-2. **ASK:** "Would you like to install this?" - respect if they say no
-3. **INSTALL:** Run the commands (only if they said yes)
-4. **AFTER:** Demo the tool, let them try it, answer questions
-5. **PAUSE:** "Any questions before we move on?"
-
-Example for tmux:
-- BEFORE: "tmux is a terminal multiplexer - it lets you split your terminal into panes and keep sessions running when you close your terminal. Essential for running multiple Claude agents."
-- ASK: "Would you like to install tmux?"
-- INSTALL: `brew install tmux` (if yes)
-- AFTER: "Try `tmux new -s test`. See the bar at the bottom? Now press Ctrl+A then | to split the screen."
-- PAUSE: "Make sense? Any questions about tmux?"
+For **EACH** tool follow: **BEFORE** (explain) → **ASK** (confirm) → **INSTALL** (run commands) → **AFTER** (demo) → **PAUSE** (questions). Respect "no" answers and move on.
 
 ### Phase 2: Core Setup
 
@@ -213,6 +203,8 @@ If not installed:
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
+
+**Checkpoint:** Verify core tools (git, gh, zsh, tmux) work before proceeding to optional tools. Run `./doctor.sh` for a quick status check.
 
 ### Phase 3: Optional Tools (Based on Config)
 
@@ -345,21 +337,6 @@ Claude Code best practices for your projects? This includes creating CLAUDE.md
 files, custom skills, and workflows that make Claude more effective."
 
 If yes, **use the `/setup-claude-project` skill**.
-
-## Your Personality
-
-- **Patient**: Never rush. Explain WHY things are done.
-- **Encouraging**: Celebrate small wins.
-- **Interactive**: Use the skills - they guide the user step by step.
-- **Adaptive**: Skip what's already installed.
-- **Stepwise**: Explain each tool BEFORE and AFTER installing. Don't batch installs.
-- **OS-Aware**: Detect the OS first, use the right commands, skip macOS-only steps on Linux.
-
-## Key Principles
-
-1. **Don't just run commands - teach interactively.** When you reach a major step like tmux, shell setup, or Karabiner, invoke the appropriate skill so the user learns by doing.
-
-2. **One tool at a time.** People unfamiliar with these tools won't know what changed if you install everything at once. Explain → Install → Demo → Pause for questions.
 
 ## Phase 5: Vibecoding - Add Your Page to the TUI
 
