@@ -1,18 +1,27 @@
+---
+name: "fzf-tips"
+description: "Teaches fzf fuzzy finder power tips including history search, file search, directory jump, preview mode, and piping patterns. Use when the user says 'fzf tips', 'fuzzy finder', 'how to use fzf', 'search history', or wants to improve their fzf workflow."
+---
+
 # fzf Power Tips
 
-Teach the user how to get the most out of fzf (fuzzy finder).
+Teaches fzf (fuzzy finder) power-user techniques hands-on.
 
 ## Before You Start
 
-Check if fzf is installed:
+Verify fzf is installed (install if missing):
+
 ```bash
-which fzf && echo "fzf: installed" || echo "fzf: NOT installed - run 'brew install fzf'"
+which fzf && echo "fzf: installed" || echo "fzf: NOT installed"
 ```
 
-If not installed:
+Install if needed (detect OS package manager):
 ```bash
-brew install fzf
-$(brew --prefix)/opt/fzf/install  # Install shell integrations
+# macOS
+brew install fzf && $(brew --prefix)/opt/fzf/install
+# Linux (apt): sudo apt install -y fzf
+# Linux (dnf): sudo dnf install -y fzf
+# Linux (pacman): sudo pacman -S fzf
 ```
 
 ---
