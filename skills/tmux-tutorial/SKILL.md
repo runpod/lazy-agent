@@ -1,6 +1,23 @@
+---
+name: tmux-tutorial
+description: "Interactive hands-on tmux tutorial teaching sessions, pane splits, vim-style navigation, session persistence, and multi-agent workflows. Use when user says 'teach me tmux', 'how do I split panes', 'tmux keybindings', 'terminal multiplexer', or asks about managing multiple terminal sessions."
+---
+
 # tmux Interactive Tutorial
 
-Teach the user tmux hands-on, one step at a time.
+Teach the user tmux hands-on, one step at a time. Give one instruction at a time, ask if it worked before moving on, and celebrate small wins.
+
+**Note:** This tutorial assumes the lazy-agent custom tmux config (`dotfiles/.tmux.conf`) with PREFIX remapped to Ctrl+A, vim-style pane navigation, and plugin bindings.
+
+## Prerequisites
+
+Verify tmux is installed before starting:
+
+```bash
+which tmux && tmux -V || echo "ERROR: tmux not installed"
+```
+
+If not installed, install it first (`brew install tmux` on macOS, `sudo apt install tmux` on Linux).
 
 ## Before You Start
 
@@ -15,38 +32,29 @@ ls /Applications/Karabiner-Elements.app 2>/dev/null && echo "Karabiner: installe
 
 Adapt your instructions accordingly throughout the tutorial.
 
-## How to Teach
-
-1. **Give one instruction at a time**
-2. **Ask if it worked before moving on**
-3. **Celebrate small wins**
-4. **If something doesn't work, help debug**
-
 ## The Lesson Plan
 
 ### Part 1: Your First Session
 
-Say: "Let's learn tmux! First, create a new session:"
+Introduce tmux: "Let's learn tmux! First, create a new session:"
 
 ```bash
 tmux new -s learning
 ```
 
-Ask: "Did it work? You should see a green status bar at the bottom."
-
-Wait for confirmation before continuing.
+Verify: "You should see a green status bar at the bottom." Wait for confirmation before continuing.
 
 ---
 
 ### Part 2: Splitting Panes
 
-Say: "Now let's split the screen. Press these keys in order:"
+Instruct: "Now let's split the screen. Press these keys in order:"
 - `PREFIX` (Caps Lock + A, or Ctrl + A) - hold, tap A, release
 - Then tap `|` (pipe character, usually Shift + backslash)
 
-Ask: "Do you see two panes side by side?"
+Verify: "Do you see two panes side by side?"
 
-If yes, continue. If no, troubleshoot:
+Troubleshoot if no:
 - "Make sure you release the prefix before pressing |"
 - "The prefix is Caps Lock + A (or Ctrl + A), not Ctrl + B"
 
@@ -54,220 +62,127 @@ If yes, continue. If no, troubleshoot:
 
 ### Part 3: Horizontal Split
 
-Say: "Let's add a horizontal split. Press:"
-- `PREFIX` then `-` (minus/dash)
+Instruct: "Let's add a horizontal split. Press `PREFIX` then `-` (minus/dash)."
 
-Ask: "Now you should have 3 panes. See them?"
+Verify: "Now you should have 3 panes. See them?"
 
 ---
 
 ### Part 4: Navigating Panes
 
-Say: "Moving between panes is easy with vim keys:"
-- `Ctrl + h` (or Caps Lock + h) - move left
-- `Ctrl + l` (or Caps Lock + l) - move right
-- `Ctrl + j` (or Caps Lock + j) - move down
-- `Ctrl + k` (or Caps Lock + k) - move up
+Instruct: "Moving between panes uses vim keys — no prefix needed:"
 
-Say: "No prefix needed - just hold Ctrl (or Caps Lock) and tap the direction."
+| Key | Direction |
+|-----|-----------|
+| `Ctrl + h` (or Caps Lock + h) | Left |
+| `Ctrl + l` (or Caps Lock + l) | Right |
+| `Ctrl + j` (or Caps Lock + j) | Down |
+| `Ctrl + k` (or Caps Lock + k) | Up |
 
-Ask: "Try moving around. Can you reach all panes?"
+Verify: "Try moving around. Can you reach all panes?"
 
 ---
 
 ### Part 5: Zoom
 
-Say: "Sometimes you want one pane fullscreen. Press:"
-- `PREFIX` then `z` (z for zoom)
+Instruct: "Sometimes you want one pane fullscreen. Press `PREFIX` then `z` (z for zoom). Press it again to unzoom."
 
-Say: "The current pane should fill the screen. Press PREFIX + z again to unzoom."
-
-Ask: "Did zoom toggle on and off?"
+Verify: "Did zoom toggle on and off?"
 
 ---
 
 ### Part 6: Multiple Sessions
 
-First, check what sessions they currently have:
+Check current sessions, then create more in the background:
 
 ```bash
 tmux ls
-```
-
-Say: "You currently have [X] session(s) running. Let's create more WITHOUT leaving this one."
-
-Say: "The `-d` flag creates sessions in the background. Try creating a test session:"
-
-```bash
 tmux new-session -d -s test-session
-```
-
-Say: "Now check your sessions again:"
-
-```bash
 tmux ls
 ```
 
-Ask: "Do you see the new session in the list?"
+Explain: "The `-d` flag creates sessions in the background without leaving the current one. Name sessions after projects (e.g. `tmux new-session -d -s my-project`)."
 
-Say: "You can name sessions anything - usually after projects. For example:"
-```bash
-tmux new-session -d -s my-project
-```
-
-Ask: "Try creating one more with a name you choose. What did you name it?"
+Verify: "Do you see the new session? Try creating one more with a name you choose."
 
 ---
 
 ### Part 7: Fuzzy Session Search
 
-Say: "Here's the magic - fuzzy search your sessions. Press:"
-- `PREFIX` then `s`
+Instruct: "Press `PREFIX` then `s` — a popup appears with all your sessions. Type to filter, Enter to switch."
 
-Say: "A popup appears with all your sessions. Type to filter, Enter to switch."
-
-Ask: "Can you switch between your sessions?"
+Verify: "Can you switch between your sessions?"
 
 ---
 
 ### Part 8: New Session from Project
 
-Say: "Even better - create sessions from your project folders. Press:"
-- `PREFIX` then `n` (n for new)
+Instruct: "Press `PREFIX` then `n` (n for new) — this fuzzy-searches your project directories. Select one and it creates a session named after that folder, already cd'd into it."
 
-Say: "This fuzzy-searches your project directories. Select one and it creates a session named after that folder, already cd'd into it."
-
-Ask: "Try creating a session from one of your projects."
+Verify: "Try creating a session from one of your projects."
 
 ---
 
 ### Part 9: Detach and Reattach
 
-Say: "Sessions persist even when you disconnect. But BEFORE we detach, memorize this command:"
+**Important:** Before detaching, ensure user knows how to get back.
+
+Explain: "Sessions persist even when you disconnect. Memorize this: `tmux attach`."
+
+Ask: "What command do you run to get back into tmux?" **Wait for them to respond before continuing.**
+
+Then instruct: "Now press `PREFIX` then `d` to detach. Get back in with:"
 
 ```bash
-tmux attach
+tmux attach              # Reattach to last session
+tmux ls                  # List all sessions
+tmux attach -t NAME      # Attach to specific session
 ```
 
-Say: "This is how you get back. Say it out loud: 'tmux attach'"
-
-Ask: "What command do you run to get back into tmux? (Type it to confirm you've got it)"
-
-**WAIT for them to respond with `tmux attach` before continuing!**
-
-Say: "Perfect! Now you're safe to detach. Press:"
-- `PREFIX` then `d`
-
-Say: "You're back in regular terminal. Your sessions are still running! Now get back in:"
-
-```bash
-tmux attach
-```
-
-Say: "If you have multiple sessions, use:"
-```bash
-tmux ls              # List all sessions
-tmux attach -t NAME  # Attach to specific session
-```
-
-Ask: "Did you make it back?"
+Verify: "Did you make it back?"
 
 ---
 
 ### Part 10: Advanced Features (Optional)
 
-Say: "Want to see some power-user features? These are optional but super useful."
+Ask before proceeding — these are power-user features:
 
-#### LazyGit Popup
-- `PREFIX` then `g` - Opens lazygit in a popup overlay
+| Binding | Feature |
+|---------|---------|
+| `PREFIX` + `g` | LazyGit popup (press `q` to close) |
+| `PREFIX` + `t` | System monitor (htop/top) popup |
+| `PREFIX` + `y` | Synchronize panes — same input to ALL panes |
+| `PREFIX` + `Space` | Cycle through preset layouts |
+| `PREFIX` + `>` / `<` | Swap pane with next/previous |
+| `PREFIX` + `b` | Break pane into its own window |
+| `PREFIX` + `Ctrl+s` | Save sessions (tmux-resurrect) |
+| `PREFIX` + `Ctrl+r` | Restore sessions after reboot |
 
-Say: "Try it if you have lazygit installed. Press `q` to close."
-
-#### System Monitor
-- `PREFIX` then `t` - Opens htop/top in a popup
-
-#### Synchronize Panes
-Say: "This sends the same input to ALL panes at once. Great for running commands on multiple servers."
-- `PREFIX` then `y` - Toggle sync on/off
-
-Ask: "Want to try it? Split into 2 panes and toggle sync, then type something."
-
-#### Rearranging Panes
-- `PREFIX` then `Space` - Cycle through preset layouts
-- `PREFIX` then `>` - Swap pane with next
-- `PREFIX` then `<` - Swap pane with previous
-- `PREFIX` then `b` - Break pane into its own window
-
-#### Session Persistence
-Say: "With tmux-resurrect, your sessions survive reboots!"
-- `PREFIX` then `Ctrl+s` - Save sessions
-- `PREFIX` then `Ctrl+r` - Restore sessions
-
-Say: "Sessions auto-save every 10 minutes. If your machine reboots, just start tmux and everything comes back."
+Sessions auto-save every 10 minutes with tmux-resurrect. If the machine reboots, start tmux and everything comes back.
 
 ---
 
 ### Part 11: Quick Reference
 
-Say: "Here's the complete cheat sheet:"
+For the full keybinding cheat sheet, see [references/CHEATSHEET.md](references/CHEATSHEET.md).
 
-```
-PREFIX = Caps Lock + A (or Ctrl + A)
-
-Splits:
-  PREFIX |       vertical split
-  PREFIX -       horizontal split
-
-Navigation:
-  Ctrl + h/j/k/l move between panes (no prefix)
-
-Panes:
-  PREFIX z       zoom toggle
-  PREFIX x       kill pane
-  PREFIX b       break pane to window
-  PREFIX Space   cycle layouts
-  PREFIX > / <   swap panes
-
-Sessions:
-  PREFIX d       detach
-  PREFIX s       fuzzy search sessions
-  PREFIX n       new session from project
-  PREFIX y       sync panes toggle
-  tmux ls        list sessions
-  tmux attach    reattach
-
-Popups:
-  PREFIX g       lazygit
-  PREFIX t       htop/top
-
-Persistence:
-  PREFIX Ctrl+s  save sessions
-  PREFIX Ctrl+r  restore sessions
-```
-
-Say: "There's also a printable cheatsheet at `reference/tmux-cheatsheet.html`"
+There's also a printable version at `reference/tmux-cheatsheet.html`.
 
 ---
 
 ### Wrap Up
 
-Say: "You're ready! The key things to remember:"
+Summarize key takeaways:
 - **Prefix is Caps Lock + A** (or Ctrl + A)
-- **Vim keys for navigation** (h/j/k/l with Ctrl)
+- **Vim keys for navigation** (h/j/k/l with Ctrl, no prefix)
 - **Sessions persist** when you detach
 - **PREFIX + s** to fuzzy search sessions
 - **PREFIX + n** to start new project sessions
 - **PREFIX + g** for lazygit popup
 - **Sessions survive reboots** with tmux-resurrect
 
-Say: "To install the plugins for session persistence, press PREFIX + I (capital I) in tmux."
+Remind: "Press PREFIX + I (capital I) to install plugins for session persistence."
 
-Ask: "Any questions? Want to practice anything again?"
+Point to `reference/tmux-cheatsheet.html` for a printable reference.
 
-## Tips for Teaching
-
-- Go slow - tmux has a learning curve
-- If they get lost, have them `tmux kill-server` and start fresh
-- With Karabiner, Caps Lock + A is much more ergonomic than reaching for Ctrl
-- Encourage experimentation
-- Remind them to run PREFIX + I to install plugins after setup
+If the user gets stuck at any point, `tmux kill-server` resets everything for a fresh start.
